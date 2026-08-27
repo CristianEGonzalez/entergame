@@ -1,16 +1,16 @@
 import React from "react";
 import Hero from "../components/Hero";
 import Canje from "../components/Canje";
-import Venta from "../components/Venta";
+import Comprar from "../components/Comprar";
 import Vender from "../components/Vender";
 
 const Home: React.FC = () => {
   return (
     <main>
       <Hero />
-      <Venta />
-      <Canje />
+      <Comprar />
       <Vender />
+      <Canje />
       {/*<FAQ /> */}
     </main>
   );

@@ -1,6 +1,6 @@
 import React from "react";
 
-const Venta: React.FC = () => {
+const Comprar: React.FC = () => {
   const features = [
     {
       id: 1,
@@ -42,7 +42,7 @@ const Venta: React.FC = () => {
 
   return (
     <section
-      id="venta"
+      id="comprar"
       className="relative w-full py-24 px-4 lg:px-8 bg-gray-50 font-sans overflow-hidden"
     >
       {/* Patrón de fondo sutil para darle textura */}
@@ -111,4 +111,4 @@ const Venta: React.FC = () => {
   );
 };
 
-export default Venta;
+export default Comprar;
