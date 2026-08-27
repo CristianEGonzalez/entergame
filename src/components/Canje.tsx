@@ -41,7 +41,7 @@ const Canje: React.FC = () => {
         </span>
         
         <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 mb-6 text-center tracking-tight leading-tight">
-          Renová tu colección <br className="hidden sm:block" /> inteligentemente
+          Renová tu colección<br className="hidden sm:block" />
         </h2>
         
         <p className="text-lg text-gray-600 max-w-2xl text-center mb-16 font-medium leading-relaxed">
