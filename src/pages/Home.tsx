@@ -1,5 +1,6 @@
 import React from "react";
 import Hero from "../components/Hero";
+import Canje from "../components/Canje";
 // import Projects from "../components/Projects";
 // import FAQ from "../components/FAQ";
 // import Services from "../components/Services";
@@ -10,6 +11,7 @@ const Home: React.FC = () => {
   return (
     <main>
       <Hero />
+      <Canje />
       {/* <Services />
       <About />
       <WhyChoose />
