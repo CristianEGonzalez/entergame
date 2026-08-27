@@ -27,7 +27,7 @@ const SlidesCarrousel: React.FC = () => {
       tag: "SISTEMA DE CANJE",
       title: "Renová tu Colección",
       desc: "Traé tus juegos físicos usados y usalos como parte de pago para llevarte nuevas aventuras a casa.",
-      bgSolid: "bg-blue-600",
+      bgSolid: "bg-green-600",
       icon: "♻️",
     },
     {
@@ -35,7 +35,7 @@ const SlidesCarrousel: React.FC = () => {
       tag: "CONFIANZA",
       title: "Juegos Verificados",
       desc: "Todos nuestros títulos físicos son rigurosamente testeados para asegurar su perfecto estado y funcionamiento.",
-      bgSolid: "bg-green-500",
+      bgSolid: "bg-yellow-500",
       icon: "⭐",
     },
   ];
