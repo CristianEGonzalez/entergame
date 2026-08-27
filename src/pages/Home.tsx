@@ -4,6 +4,7 @@ import Canje from "../components/Canje";
 import Comprar from "../components/Comprar";
 import Vender from "../components/Vender";
 import Catalogo from "../components/Catalogo";
+import Faq from "../components/Faq";
 
 const Home: React.FC = () => {
   return (
@@ -13,7 +14,7 @@ const Home: React.FC = () => {
       <Comprar />
       <Vender />
       <Canje />
-      {/*<FAQ /> */}
+      <Faq />
     </main>
   );
 };
