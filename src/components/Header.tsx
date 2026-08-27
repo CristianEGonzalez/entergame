@@ -13,7 +13,7 @@ const Header: React.FC = () => {
   
   const hamburgerLine: string = `h-1 w-6 my-1 rounded-full bg-gray-100 transition ease transform duration-300`;
   
-  const links: string[] = ["Catálogo", "Canje", "Venta", "FAQ"];
+  const links: string[] = ["Catálogo", "Venta", "Canje", "Vender", "FAQ"];
 
   useEffect(() => {
     if (menuOpen) {
