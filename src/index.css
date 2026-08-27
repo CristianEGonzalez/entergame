@@ -31,7 +31,9 @@
 /* Colores y texto */
 @theme {
   --color-brand-black: #0a0a0f;
-  --color-brand-cyan: #5aefff;
+  --color-brand-cyan: #0AB9E6;
+  --color-brand-red: #FF3028;
+  --color-brand-gray: #F9FAFB;
   --color-brand-purple: #8a2be2;
   --color-brand-green: #39ff9b;
   --color-text-subtitle: #e0e0e0;

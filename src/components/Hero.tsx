@@ -37,7 +37,7 @@ const Hero: React.FC = () => {
   return (
     <section
       id="inicio"
-      className="relative w-full min-h-[90vh] flex items-center justify-center px-4 py-12 lg:px-8 overflow-hidden bg-gray-50 font-sans"
+      className="relative w-full min-h-[90vh] flex items-center justify-center px-4 py-12 lg:px-8 overflow-hidden bg-brand-gray font-sans"
     >
 
       {/* Patrón de puntos súper sutil opcional */}
@@ -60,7 +60,7 @@ const Hero: React.FC = () => {
             <span className="text-red-600">
               Nintendo&nbsp;
             </span>
-            <span className="text-cyan-500">
+            <span className="text-brand-cyan">
                Switch&nbsp;
             </span>
           </h1>

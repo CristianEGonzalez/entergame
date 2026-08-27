@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import Button from "./Button";
 import ContactModal from "./ContactModal";
+import EnterGameLogo from "./EnterGameLogo";
 
 const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
@@ -45,12 +46,11 @@ const Header: React.FC = () => {
     <>
       <header className="sticky top-0 z-50 w-full bg-black/80 backdrop-blur-md py-3 px-4 pb-3 flex justify-between items-center border-b border-gray-200 font-sans shadow-xs">
         
+
         {/* Logo Area */}
-        <div className="relative z-50 flex items-center lg:text-3xl md:text-2xl text-2xl tracking-tighter">
-          <span className="text-red-600 mr-2 text-2xl">🎮</span>
-          <Link to="/" onClick={(e) => handleNavClick(e, "inicio")}
-            className="font-orbitron font-bold mr-2 md:mr-12 text-cyan-500 tracking-tight">
-            Enter<span className="text-red-600">Game</span>
+        <div className="relative z-50 flex items-center tracking-tighter">
+          <Link to="/" onClick={(e) => handleNavClick(e, "inicio")}>
+            <EnterGameLogo className="w-64 lg:w-72 hover:scale-105 transition-transform duration-300" />
           </Link>
         </div>
 
@@ -61,7 +61,7 @@ const Header: React.FC = () => {
               key={item}
               to={`/#${item.toLowerCase()}`}
               onClick={(e) => handleNavClick(e, item.toLowerCase())}
-              className="text-gray-300 hover:text-red-600 font-bold transition-colors duration-300 text-sm uppercase tracking-wider mr-8"
+              className="text-gray-300 hover:text-brand-red font-bold transition-colors duration-300 text-sm uppercase tracking-wider mr-8"
             >
               {item}
             </Link>
@@ -69,7 +69,7 @@ const Header: React.FC = () => {
           <Button 
             nombre="Contactar" 
             onClick={() => setContactOpen(true)} 
-            className="bg-red-600 text-white font-bold py-2 px-6 rounded-full hover:bg-red-700 transition-colors shadow-md"
+            className="bg-brand-red text-white font-bold py-2 px-6 rounded-full hover:bg-red-700 transition-colors shadow-md"
           />
         </nav>
 
