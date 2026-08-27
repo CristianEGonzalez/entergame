@@ -46,7 +46,7 @@ const Venta: React.FC = () => {
       className="relative w-full py-24 px-4 lg:px-8 bg-gray-50 font-sans overflow-hidden"
     >
       {/* Patrón de fondo sutil para darle textura */}
-      <div className="absolute inset-0 z-0 bg-[radial-gradient(#d1d5db_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none" />
+      <div className="absolute inset-0 z-0 bg-[radial-gradient(#d1d5db_1px,transparent_1px)] bg-size-[24px_24px] opacity-40 pointer-events-none" />
 
       <div className="relative max-w-7xl mx-auto z-10 flex flex-col items-center">
         
