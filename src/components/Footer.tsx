@@ -20,7 +20,7 @@ const Footer: React.FC = () => {
           
           {/* 1. Marca y Descripción */}
           <div className="flex flex-col items-center md:items-start text-center md:text-left">
-            <h2 className="text-3xl !font-orbitron font-black tracking-tighter mb-4 flex items-center gap-1">
+            <h2 className="text-3xl font-orbitron! font-black tracking-tighter mb-4 flex items-center gap-1">
               <span className="text-brand-cyan">Enter</span>
               <span className="text-brand-red">Game</span>
             </h2>
