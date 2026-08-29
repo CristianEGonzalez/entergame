@@ -3,24 +3,23 @@
     "id": 1,
     "title": "Pokemon Let's Go Pikachu",
     "src": "https://i.pinimg.com/736x/c5/44/21/c544217268afd9136cd4d57ad1df5516.jpg",
-    "status": ""
+    "status": "$ 75.000"
   },
   {
     "id": 2,
     "title": "Super Mario Odyssey",
     "src": "https://images.igdb.com/igdb/image/upload/t_cover_big/co1mxf.jpg",
-    "status": ""
+    "status": "$ 80.000"
   },
   {
     "id": 3,
-    "title": "Super Smash Bros Ultimate",
-    "src": "https://i.3djuegos.com/juegos/15649/super_smash_bros_switch/fotos/ficha/super_smash_bros_switch-4581613.webp",
-    "status": ""
+    "title": "Pokemon Diamante Brillante",
+    "src": "https://cdn.mobygames.com/covers/10940964-pokemon-brilliant-diamond-nintendo-switch-front-cover.jpg",
+    "status": "$ 80.000"
   },
   {
     "id": 4,
     "title": "Pokémon Sword",
     "src": "https://m.media-amazon.com/images/M/MV5BNTVjNTEwZDQtNTI2MC00MjkzLTliYTMtMjZjYjAyMDMxOWJjXkEyXkFqcGc@._V1_.jpg",
-    "status": ""
+    "status": "$ 80.000"
   }
-]
