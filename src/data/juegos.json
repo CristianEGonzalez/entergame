@@ -15,12 +15,18 @@
     "id": 3,
     "title": "Pokemon Diamante Brillante",
     "src": "https://cdn.mobygames.com/covers/10940964-pokemon-brilliant-diamond-nintendo-switch-front-cover.jpg",
-    "status": "$ 80.000"
+    "status": "$ 75.000"
   },
   {
     "id": 4,
     "title": "Pokémon Sword",
     "src": "https://m.media-amazon.com/images/M/MV5BNTVjNTEwZDQtNTI2MC00MjkzLTliYTMtMjZjYjAyMDMxOWJjXkEyXkFqcGc@._V1_.jpg",
-    "status": "$ 80.000"
+    "status": "$ 75.000"
+  },
+  {
+    "id": 5,
+    "title": "Pokémon Violet + DCL Area Zero",
+    "src": "https://gamefaqs.gamespot.com/a/box/6/6/2/971662_front.jpg",
+    "status": "$ 95.000"
   }
 ]
