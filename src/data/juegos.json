@@ -3,30 +3,42 @@
     "id": 1,
     "title": "Pokemon Let's Go Pikachu",
     "src": "https://i.pinimg.com/736x/c5/44/21/c544217268afd9136cd4d57ad1df5516.jpg",
-    "status": "$ 75.000"
+    "price": "$ 75.000",
+    "status": 0
   },
   {
     "id": 2,
     "title": "Super Mario Odyssey",
     "src": "https://images.igdb.com/igdb/image/upload/t_cover_big/co1mxf.jpg",
-    "status": "$ 80.000"
+    "price": "$ 80.000",
+    "status": 0
   },
   {
     "id": 3,
     "title": "Pokemon Diamante Brillante",
     "src": "https://cdn.mobygames.com/covers/10940964-pokemon-brilliant-diamond-nintendo-switch-front-cover.jpg",
-    "status": "$ 75.000"
+    "price": "$ 75.000",
+    "status": 0
   },
   {
     "id": 4,
     "title": "Pokémon Sword",
     "src": "https://m.media-amazon.com/images/M/MV5BNTVjNTEwZDQtNTI2MC00MjkzLTliYTMtMjZjYjAyMDMxOWJjXkEyXkFqcGc@._V1_.jpg",
-    "status": "$ 75.000"
+    "price": "$ 75.000",
+    "status": 0
   },
   {
     "id": 5,
     "title": "Pokémon Violet + DCL Area Zero",
     "src": "https://gamefaqs.gamespot.com/a/box/6/6/2/971662_front.jpg",
-    "status": "$ 95.000"
+    "price": "$ 95.000",
+    "status": 1
+  },
+  {
+    "id": 6,
+    "title": "Mario Kart World",
+    "src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9jnp3qdzyWusEMro5ND1U6QJZa-yC-EgLuYVH1oOzOA&s=10",
+    "price": "$ 100.000",
+    "status": 2
   }
 ]

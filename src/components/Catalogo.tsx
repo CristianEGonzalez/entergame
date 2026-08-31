@@ -26,42 +26,77 @@ const Catalogo: React.FC = () => {
             Nuestro stock rota constantemente. Te mostramos algunos de los títulos destacados que acaban de entrar y están listos para entrega inmediata.
           </p>
 
-          {/* === GRILLA DE JUEGOS DESTACADOS === */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 w-full mb-16">
-            {featuredGames.map((game) => (
-              <div 
-                key={game.id} 
-                className="flex flex-col group cursor-pointer"
-                onClick={() => setContactOpen(true)}
-              >
-                {/* Portada del juego */}
-                <div className="relative rounded-2xl overflow-hidden shadow-lg mb-4 aspect-2/3 transform transition-transform duration-500 group-hover:-translate-y-2 group-hover:shadow-2xl border border-gray-100">
-                  <img 
-                    src={game.src} 
-                    alt={game.title} 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  {/* Overlay oscuro al pasar el mouse */}
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-                    <span className="opacity-0 group-hover:opacity-100 bg-red-600 text-white font-bold text-sm py-2 px-4 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                      Consultar
-                    </span>
+          {/* === GRILLA DE JUEGOS DESTACADOS (FLEX CENTRADO) === */}
+          <div className="flex flex-wrap justify-center gap-6 md:gap-10 w-full max-w-6xl mx-auto mb-16">
+            {featuredGames.map((game) => {
+              // Status: 0 (Disponible), 1 (Vendido), 2 (Reservado)
+              const isSold = game.status === 1;
+              const isReserved = game.status === 2;
+              const isUnavailable = isSold || isReserved;
+
+              return (
+                <div 
+                  key={game.id} 
+                  // w-[45%] en móviles (2 por fila), w-[30%] en escritorio (3 por fila máximo)
+                  className={`flex flex-col w-[45%] sm:w-[30%] lg:w-[28%] max-w-[340px] ${isUnavailable ? "cursor-default opacity-90" : "group cursor-pointer"}`}
+                  onClick={() => !isUnavailable && setContactOpen(true)}
+                >
+                  {/* Portada del juego */}
+                  <div className={`relative rounded-2xl overflow-hidden mb-4 aspect-2/3 border border-gray-100 transform transition-transform duration-500 ${
+                    isSold ? "grayscale-[60%] shadow-sm" : 
+                    isReserved ? "grayscale-[30%] shadow-sm" : 
+                    "shadow-lg group-hover:-translate-y-2 group-hover:shadow-2xl"
+                  }`}>
+                    
+                    <img 
+                      src={game.src} 
+                      alt={game.title} 
+                      className={`w-full h-full object-cover transition-transform duration-700 ${isUnavailable ? "" : "group-hover:scale-105"}`}
+                    />
+                    
+                    {/* === FRANJAS DIAGONALES (Ajustadas para tarjetas más anchas) === */}
+                    {isSold && (
+                      <div className="absolute top-6 -right-12 w-48 bg-red-600 text-white text-xs sm:text-sm font-black py-1.5 text-center transform rotate-45 z-20 shadow-lg uppercase tracking-widest border-y border-red-700">
+                        Vendido
+                      </div>
+                    )}
+
+                    {isReserved && (
+                      <div className="absolute top-6 -right-12 w-48 bg-amber-400 text-gray-900 text-xs sm:text-sm font-black py-1.5 text-center transform rotate-45 z-20 shadow-lg uppercase tracking-widest border-y border-amber-500">
+                        Reservado
+                      </div>
+                    )}
+
+                    {/* Overlay oscuro al pasar el mouse (solo si Disponible) */}
+                    {!isUnavailable && (
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center z-10">
+                        <span className="opacity-0 group-hover:opacity-100 bg-red-600 text-white font-bold text-sm py-2 px-4 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                          Consultar
+                        </span>
+                      </div>
+                    )}
                   </div>
+                  
+                  {/* Info del juego */}
+                  <span className={`text-sm font-bold uppercase tracking-wider mb-1 ${
+                    isSold ? "text-gray-400 line-through" : 
+                    isReserved ? "text-gray-400" : 
+                    "text-gray-500"
+                  }`}>
+                    {game.price}
+                  </span>
+                  <h3 className={`font-bold text-lg md:text-xl leading-tight transition-colors ${
+                    isUnavailable ? "text-gray-500" : "text-gray-900 group-hover:text-red-600"
+                  }`}>
+                    {game.title}
+                  </h3>
                 </div>
-                
-                {/* Info del juego */}
-                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">
-                  {game.status}
-                </span>
-                <h3 className="text-gray-900 font-bold text-lg leading-tight group-hover:text-red-600 transition-colors">
-                  {game.title}
-                </h3>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
-          {/* === BANNER DE CONSULTA (EL VERDADERO CATÁLOGO) === */}
-          <div className="w-full bg-gray-50 border border-gray-200 rounded-4xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between text-center md:text-left gap-8">
+          {/* === BANNER DE CONSULTA === */}
+          <div className="w-full bg-gray-50 border border-gray-200 rounded-[2rem] p-8 md:p-12 flex flex-col md:flex-row items-center justify-between text-center md:text-left gap-8">
             <div>
               <h3 className="text-2xl md:text-3xl font-black text-gray-900 mb-3 tracking-tight">
                 ¿No encontrás el que buscás?
