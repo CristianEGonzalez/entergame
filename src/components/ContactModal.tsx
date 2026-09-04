@@ -8,20 +8,26 @@ interface ContactModalProps {
 
 interface FormData {
   nombre: string;
+  telefono: string;
   motivo: string;
   mensaje: string;
 }
 
 const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
-  const WHATSAPP_NUMBER = "5491169603403"; 
+  const WHATSAPP_NUMBER = "5491169603403";
+  
+  // URL API de SheetDB para el Newsletter
+  const SHEETDB_CONTACTOS_API = "https://sheetdb.io/api/v1/9tdrje8ynhsai?sheet=Newsletter"
 
   const [formData, setFormData] = useState<FormData>({
     nombre: "",
+    telefono: "",
     motivo: "Comprar un juego",
     mensaje: "",
   });
 
   const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [subscribe, setSubscribe] = useState<boolean>(true); // Checkbox activado por defecto
 
   useEffect(() => {
     if (isOpen) {
@@ -47,16 +53,34 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Armamos el mensaje formateado con negritas para WhatsApp
+    //Si aceptó recibir novedades, envio los datos a SheetDB en segundo plano
+    if (subscribe) {
+      fetch(SHEETDB_CONTACTOS_API, {
+        method: "POST",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          data: [
+            {
+              "Fecha": new Date().toLocaleDateString("es-AR"),
+              "Nombre": formData.nombre,
+              "Telefono": "'" + formData.telefono,
+              "Motivo": formData.motivo,
+              "Mensaje": formData.mensaje,
+            },
+          ],
+        }),
+      }).catch((err) => console.error("Error guardando lead:", err));
+    }
+
+    //Armo el mensaje para WhatsApp y abro la app en una nueva pestaña
     const text = `🎮 *Nueva Consulta - EnterGame*\n\n*Nombre:* ${formData.nombre}\n*Motivo:* ${formData.motivo}\n*Detalles:* ${formData.mensaje}`;
-    
-    // Codificamos el texto para que los espacios y saltos de línea funcionen en la URL
     const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
     
-    // Abrimos WhatsApp en una pestaña nueva
+    //Abro WhatsApp y cierro el modal
     window.open(url, "_blank");
-    
-    // Cerramos el modal
     onClose();
   };
 
@@ -93,26 +117,43 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
         </div>
 
         {/* Formulario */}
-        <div className="p-6 md:p-8 overflow-y-auto">
+        <div className="p-6 md:p-8 overflow-y-auto max-h-[80vh]">
           <p className="text-sm text-gray-600 mb-6 font-medium">
             Completá los datos y te redirigiremos a WhatsApp para chatear directamente con nosotros.
           </p>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             
-            <div className="space-y-1.5">
-              <label className="text-sm font-bold text-gray-700 uppercase tracking-wider">
-                Tu Nombre
-              </label>
-              <input
-                type="text"
-                name="nombre"
-                required
-                value={formData.nombre}
-                onChange={handleChange}
-                className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3.5 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-all placeholder:text-gray-400"
-                placeholder="Ej: Mario"
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div className="space-y-1.5">
+                <label className="text-sm font-bold text-gray-700 uppercase tracking-wider">
+                  Tu Nombre
+                </label>
+                <input
+                  type="text"
+                  name="nombre"
+                  required
+                  value={formData.nombre}
+                  onChange={handleChange}
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3.5 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-all placeholder:text-gray-400"
+                  placeholder="Ej: Mario"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-sm font-bold text-gray-700 uppercase tracking-wider">
+                  WhatsApp
+                </label>
+                <input
+                  type="tel"
+                  name="telefono"
+                  required
+                  value={formData.telefono}
+                  onChange={handleChange}
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3.5 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-all placeholder:text-gray-400"
+                  placeholder="Tu número"
+                />
+              </div>
             </div>
 
             <div className="space-y-1.5">
@@ -152,7 +193,23 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
               />
             </div>
 
-            <div className="pt-4">
+            {/* Checkbox de Novedades */}
+            <div className="flex items-start gap-3 bg-gray-50 p-3 rounded-lg border border-gray-200">
+              <div className="flex items-center h-5">
+                <input
+                  id="subscribe"
+                  type="checkbox"
+                  checked={subscribe}
+                  onChange={(e) => setSubscribe(e.target.checked)}
+                  className="w-4 h-4 text-red-600 bg-white border-gray-300 rounded-sm focus:ring-red-500 focus:ring-2 cursor-pointer"
+                />
+              </div>
+              <label htmlFor="subscribe" className="text-sm text-gray-600 cursor-pointer select-none">
+                Quiero recibir novedades y ofertas.
+              </label>
+            </div>
+
+            <div className="pt-2">
               <button
                 type="submit"
                 className="w-full bg-[#25D366] text-white font-bold text-lg py-4 px-6 rounded-xl shadow-lg shadow-[#25D366]/30 hover:bg-[#1EBE57] transition-all transform hover:-translate-y-1 flex justify-center items-center gap-3"
