@@ -47,7 +47,14 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    
+    // Si el campo es "telefono", filtramos todo lo que no sea un número (0-9)
+    if (name === "telefono") {
+      const soloNumeros = value.replace(/\D/g, ""); // \D significa "todo lo que no sea dígito"
+      setFormData({ ...formData, [name]: soloNumeros });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -88,7 +95,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
 
   return createPortal(
     <div
-      className={`fixed inset-0 z-9999 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-opacity duration-300 ${
+      className={`fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-opacity duration-300 ${
         isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}
     >
