@@ -18,7 +18,7 @@ const Comprar: React.FC = () => {
       id: 2,
       icon: "🤝",
       title: "Entregas Flexibles",
-      desc: "Retirá tu compra personalmente en nuestra zona o coordinemos en puntos de encuentro seguros y estratégicos. Nos adaptamos para que tengas tu juego lo antes posible.",
+      desc: "Retirá tu compra personalmente en nuestra zona, recibila por correo (abonándola previamente), o coordinamos puntos de encuentro seguros y estratégicos.",
       color: "text-red-600",
       bg: "bg-red-50",
       border: "border-red-100"
@@ -65,6 +65,7 @@ const Comprar: React.FC = () => {
           
           <p className="text-lg text-gray-600 max-w-2xl text-center mb-16 font-medium leading-relaxed">
             Comprar en EnterGame es rápido y seguro. Nos aseguramos de que tengas la mejor experiencia desde que elegís el título hasta que lo ponés en tu consola.
+            Nos encontramos en <span className="font-bold">Ituzaingó, Zona Oeste de Buenos Aires</span>.
           </p>
 
           {/* === GRILLA DE CARACTERÍSTICAS (2x2 en Desktop) === */}

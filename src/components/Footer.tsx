@@ -56,7 +56,7 @@ const Footer: React.FC = () => {
             <div className="space-y-4">
               <div className="flex items-center gap-3 text-gray-400">
                 <span className="text-xl">📍</span>
-                <span className="font-medium">Zona Oeste, Buenos Aires</span>
+                <span className="font-medium">Ituzaingó, Zona Oeste, Buenos Aires</span>
               </div>
               <div className="flex items-center gap-3 text-gray-400">
                 <span className="text-xl">🌐</span>
