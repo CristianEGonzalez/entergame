@@ -16,8 +16,8 @@ interface FormData {
 const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
   const WHATSAPP_NUMBER = "5491169603403";
   
-  // URL API de SheetDB para el Newsletter
-  const SHEETDB_CONTACTOS_API = "https://sheetdb.io/api/v1/9tdrje8ynhsai?sheet=Newsletter"
+  //URL del Google Apps Script que maneja el envío de datos a Google Sheets
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw3qhvjmoSIrLXLZtDT2kPCLTxLythvausFe1if0XVAm-drlntYt4o0l72pP75RJXl7BA/exec";
 
   const [formData, setFormData] = useState<FormData>({
     nombre: "",
@@ -47,10 +47,9 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    
-    // Si el campo es "telefono", filtramos todo lo que no sea un número (0-9)
+    // Restricción: Solo números para el teléfono
     if (name === "telefono") {
-      const soloNumeros = value.replace(/\D/g, ""); // \D significa "todo lo que no sea dígito"
+      const soloNumeros = value.replace(/\D/g, ""); 
       setFormData({ ...formData, [name]: soloNumeros });
     } else {
       setFormData({ ...formData, [name]: value });
@@ -60,24 +59,20 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    //Si aceptó recibir novedades, envio los datos a SheetDB en segundo plano
+    //Si aceptó recibir novedades, envio los datos a Google Sheets en segundo plano
     if (subscribe) {
-      fetch(SHEETDB_CONTACTOS_API, {
+      fetch(GOOGLE_SCRIPT_URL, {
         method: "POST",
+        mode: "no-cors", //Evita los bloqueos de Google Apps Script
         headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json",
+          "Content-Type": "text/plain", //Evita la comprobación preflight (OPTIONS)
         },
         body: JSON.stringify({
-          data: [
-            {
-              "Fecha": new Date().toLocaleDateString("es-AR"),
-              "Nombre": formData.nombre,
-              "Telefono": "'" + formData.telefono,
-              "Motivo": formData.motivo,
-              "Mensaje": formData.mensaje,
-            },
-          ],
+          Fecha: new Date().toLocaleDateString("es-AR"),
+          Nombre: formData.nombre,
+          Telefono: "'" + formData.telefono,
+          Motivo: formData.motivo,
+          Mensaje: formData.mensaje,
         }),
       }).catch((err) => console.error("Error guardando lead:", err));
     }

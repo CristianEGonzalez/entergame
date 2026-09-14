@@ -14,18 +14,28 @@ const [contactOpen, setContactOpen] = useState<boolean>(false);
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // URL de tu API de Google Sheets
-  const SHEET_API_URL = "https://sheetdb.io/api/v1/9tdrje8ynhsai";
+  //URL de API de Google Sheets
+  const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbw3qhvjmoSIrLXLZtDT2kPCLTxLythvausFe1if0XVAm-drlntYt4o0l72pP75RJXl7BA/exec";
 
   useEffect(() => {
     fetch(SHEET_API_URL)
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error("Error en la API: " + res.status);
+        return res.json();
+      })
       .then((data) => {
-        setGames(data);
+        // Validamos que lo que llegue sea realmente una lista (Array)
+        if (Array.isArray(data)) {
+          setGames(data);
+        } else {
+          console.error("La API no devolvió una lista válida:", data);
+          setGames([]); // Evita que se rompa el .map()
+        }
         setLoading(false);
       })
       .catch((err) => {
         console.error("Error al cargar el catálogo desde Google Sheets:", err);
+        setGames([]); // Evita el crasheo
         setLoading(false);
       });
   }, []);
