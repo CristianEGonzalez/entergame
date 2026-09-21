@@ -14,10 +14,9 @@ interface FormData {
 }
 
 const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
-  const WHATSAPP_NUMBER = "5491169603403";
-  const WHATSAPP_CHANNEL_URL = "https://chat.whatsapp.com/GB4Tw86owEm500CsGrr9Qy";
-  
-  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw3qhvjmoSIrLXLZtDT2kPCLTxLythvausFe1if0XVAm-drlntYt4o0l72pP75RJXl7BA/exec";
+  const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER;
+  const WHATSAPP_CHANNEL_URL = import.meta.env.VITE_WHATSAPP_CHANNEL_URL;
+  const GOOGLE_SCRIPT_URL = import.meta.env.VITE_GOOGLE_SCRIPT_URL;
 
   const [formData, setFormData] = useState<FormData>({
     nombre: "",
@@ -93,7 +92,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
 
   return createPortal(
     <div
-      className={`fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-opacity duration-300 ${
+      className={`fixed inset-0 z-9999 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-opacity duration-300 ${
         isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}
     >

@@ -15,7 +15,7 @@ const [contactOpen, setContactOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
 
   //URL de API de Google Sheets
-  const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbw3qhvjmoSIrLXLZtDT2kPCLTxLythvausFe1if0XVAm-drlntYt4o0l72pP75RJXl7BA/exec";
+  const SHEET_API_URL = import.meta.env.VITE_GOOGLE_SCRIPT_URL;
 
   useEffect(() => {
     fetch(SHEET_API_URL)
