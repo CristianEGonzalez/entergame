@@ -128,11 +128,11 @@ const Catalogo: React.FC = () => {
           </span>
           
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 mb-6 text-center tracking-tight leading-tight">
-            Todo para tu Setup<br className="hidden sm:block" /> en un Solo Lugar
+            Todo para tu Diversión<br className="hidden sm:block" /> en un Solo Lugar
           </h2>
           
           <p className="text-lg text-gray-600 max-w-2xl text-center mb-20 font-medium leading-relaxed">
-            Explorá nuestras consolas, juegos nuevos y usados, y accesorios con stock actualizado en tiempo real.
+            Explorá nuestros juegos nuevos y usados, consolas, y accesorios con stock actualizado en tiempo real.
           </p>
 
           {/* === ESTADO DE CARGA === */}
@@ -195,16 +195,16 @@ const Catalogo: React.FC = () => {
           <div className="w-full bg-gray-50 border border-gray-200 rounded-4xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between text-center md:text-left gap-8 mt-8">
             <div>
               <h3 className="text-2xl md:text-3xl font-black text-gray-900 mb-3 tracking-tight">
-                ¿No encontrás el que buscás?
+                ¿No encontrás lo que buscás?
               </h3>
               <p className="text-gray-600 font-medium text-lg max-w-xl">
-                Traemos productos a pedido todas las semanas. Escribinos para consultar por títulos específicos de Nintendo, PlayStation o Xbox.
+                Traemos productos a pedido todas las semanas. Escribinos para consultar por que quieras que nosotros nos encargamos.
               </p>
             </div>
             
             <button 
               onClick={() => setContactOpen(true)}
-              className="shrink-0 bg-gray-900 text-white font-bold text-lg py-4 px-10 rounded-full shadow-xl hover:bg-black hover:shadow-gray-900/40 transition-all transform hover:-translate-y-1"
+              className="shrink-0 bg-gray-900 text-white font-bold text-lg py-4 px-10 rounded-2xl shadow-xl hover:bg-black hover:shadow-gray-900/40 transition-all transform hover:-translate-y-1"
             >
               Consultar Stock
             </button>
