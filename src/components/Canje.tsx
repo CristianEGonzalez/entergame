@@ -8,19 +8,19 @@ const Canje: React.FC = () => {
       id: 1,
       icon: "✨",
       title: "Condición Óptima",
-      desc: "Recibimos juegos físicos de Nintendo Switch 1 y 2 que se encuentren en excelente estado estético y en perfecto funcionamiento."
+      desc: "Recibimos juegos físicos de Nintendo Switch 1 y 2 que se encuentren en excelente estado estético y en perfecto funcionamiento. Se realiza una inspección del estado general antes de cotizar."
     },
     {
       id: 2,
       icon: "📊",
       title: "Tasación Transparente",
-      desc: "El valor a favor dependerá exclusivamente del título, su rareza y la demanda actual en el mercado."
+      desc: "El valor a favor dependerá exclusivamente del título, y la demanda actual en el mercado. Algunos no se aceptarán por su baja rotación comercial o por no cumplir con los requisitos de calidad."
     },
     {
       id: 3,
       icon: "🔄",
       title: "Parte de Pago",
-      desc: "Utilizá el monto cotizado como saldo a favor para adquirir ese nuevo lanzamiento o el clásico que le falta a tu colección. Una transición segura y rápida."
+      desc: "Utilizá el monto cotizado como saldo a favor para adquirir ese nuevo lanzamiento, accesorios, o estar más cerca de tu próxima consola. Una transición segura y rápida."
     }
   ];
 
@@ -45,7 +45,7 @@ const Canje: React.FC = () => {
         </h2>
         
         <p className="text-lg text-gray-600 max-w-2xl text-center mb-16 font-medium leading-relaxed">
-          Dale una segunda vida a los títulos que ya completaste. Aceptamos tus juegos físicos como parte de pago para que tu próxima aventura esté más cerca que nunca.
+          Dale una segunda vida a los juegos que ya completaste. Aceptamos tus juegos físicos como parte de pago para que tu próxima aventura esté más cerca que nunca.
         </p>
 
         {/* === GRILLA DE PASOS / REQUISITOS === */}
@@ -84,7 +84,7 @@ const Canje: React.FC = () => {
             </p>
           </div>
           
-          <ContactButton nombre="Solicitar Cotización" className="relative z-10 whitespace-nowrap bg-red-600 text-white font-bold text-lg py-4 px-10 rounded-full hover:bg-red-500 shadow-lg hover:shadow-red-600/50 transition-all transform hover:-translate-y-1" />
+          <ContactButton nombre="Solicitar Cotización" className="relative z-10 whitespace-nowrap bg-red-600 text-white font-bold text-lg py-4 px-10 rounded-2xl hover:bg-red-500 shadow-lg hover:shadow-red-600/50 transition-all transform hover:-translate-y-1" />
           
         </div>
 
