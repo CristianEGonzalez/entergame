@@ -9,7 +9,7 @@ const Comprar: React.FC = () => {
       id: 1,
       icon: "🛡️",
       title: "Calidad Garantizada",
-      desc: "Cada título pasa por un estricto control de calidad. Garantizamos que tanto el cartucho como su caja original se encuentran en perfecto estado estético y operativo.",
+      desc: "Nuestros productos son nuevos y originales. Y además contamos con productos usados que pasan por un estricto control de calidad que garantiza su perfecto estado y funcionamiento.",
       color: "text-blue-600",
       bg: "bg-blue-50",
       border: "border-blue-100"
@@ -18,7 +18,7 @@ const Comprar: React.FC = () => {
       id: 2,
       icon: "🤝",
       title: "Entregas Flexibles",
-      desc: "Retirá tu compra personalmente en nuestra zona, recibila por correo (abonándola previamente), o coordinamos puntos de encuentro seguros y estratégicos.",
+      desc: "Retirá tu compra personalmente en nuestra zona, recibila por correo, o coordinamos puntos de encuentro seguros y estratégicos.",
       color: "text-red-600",
       bg: "bg-red-50",
       border: "border-red-100"
@@ -36,7 +36,7 @@ const Comprar: React.FC = () => {
       id: 4,
       icon: "💬",
       title: "Asesoramiento Gamer",
-      desc: "¿No estás seguro de qué jugar después del Zelda? Te asesoramos en base a tus gustos y presupuesto para que te lleves la aventura perfecta para vos.",
+      desc: "¿No estás seguro de qué juego jugar o cual es la consola para vos? Te asesoramos en base a tus gustos y presupuesto para que te lleves la aventura perfecta.",
       color: "text-amber-500",
       bg: "bg-amber-50",
       border: "border-amber-100"
@@ -60,11 +60,11 @@ const Comprar: React.FC = () => {
           </span>
           
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 mb-6 text-center tracking-tight leading-tight">
-            Seguridad y confianza <br className="hidden sm:block" /> en cada juego
+            Seguridad y confianza <br className="hidden sm:block" /> en cada compra
           </h2>
           
           <p className="text-lg text-gray-600 max-w-2xl text-center mb-16 font-medium leading-relaxed">
-            Comprar en EnterGame es rápido y seguro. Nos aseguramos de que tengas la mejor experiencia desde que elegís el título hasta que lo ponés en tu consola.
+            Comprar en EnterGame es rápido y seguro. Nos aseguramos de que tengas la mejor experiencia desde que elegís tu producto hasta que lo empezás a disfrutar. <br className="hidden sm:block" />
             Nos encontramos en <span className="font-bold">Ituzaingó, Zona Oeste de Buenos Aires</span>.
           </p>
 
@@ -97,13 +97,13 @@ const Comprar: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-5">
             <a
               href="#catalogo"
-              className="bg-red-600 text-white font-bold text-lg py-4 px-10 rounded-full text-center shadow-[0_8px_20px_rgba(220,38,38,0.3)] hover:bg-red-700 hover:shadow-[0_12px_25px_rgba(220,38,38,0.4)] transition-all transform hover:-translate-y-1"
+              className="bg-red-600 text-white font-bold text-lg py-4 px-10 rounded-2xl text-center shadow-[0_8px_20px_rgba(220,38,38,0.3)] hover:bg-red-700 hover:shadow-[0_12px_25px_rgba(220,38,38,0.4)] transition-all transform hover:-translate-y-1"
             >
-              Ver Catálogo de Juegos
+              Ver Catálogo de Productos
             </a>
             <button
               onClick={() => setContactOpen(true)}
-              className="bg-white border-2 border-gray-200 text-gray-800 font-bold text-lg py-4 px-10 rounded-full text-center hover:border-gray-300 hover:bg-gray-50 shadow-sm transition-all transform hover:-translate-y-1"
+              className="bg-white border-2 border-gray-200 text-gray-800 font-bold text-lg py-4 px-10 rounded-2xl text-center hover:border-gray-300 hover:bg-gray-50 shadow-sm transition-all transform hover:-translate-y-1"
             >
               Coordinar una Compra
             </button>
