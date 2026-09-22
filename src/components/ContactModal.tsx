@@ -21,7 +21,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState<FormData>({
     nombre: "",
     telefono: "",
-    motivo: "Comprar un juego",
+    motivo: "Comprar un producto",
     mensaje: "",
   });
 
@@ -172,7 +172,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
                       onChange={handleChange}
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3.5 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none appearance-none cursor-pointer font-medium"
                     >
-                      <option>Comprar un juego</option>
+                      <option>Comprar un producto</option>
                       <option>Vender mis juegos</option>
                       <option>Cotizar un canje</option>
                       <option>Otra consulta</option>

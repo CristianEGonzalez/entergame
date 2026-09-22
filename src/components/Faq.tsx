@@ -3,26 +3,22 @@ import React, { useState } from "react";
 const Faq: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(0);
 
-  const faqs = [
+const faqs = [
     {
-      question: "¿Aceptan juegos de otras consolas?",
-      answer: "Por el momento, nos especializamos exclusivamente en la compra, venta y canje de juegos físicos para Nintendo Switch (1 y 2). Esto nos permite garantizar el mejor conocimiento y tasación del mercado para esta consola."
+      question: "¿Trabajan con productos nuevos y usados?",
+      answer: "¡Sí, ambos! Tenemos juegos físicos usados (testeados y garantizados), además de juegos sellados, consolas y accesorios 100% nuevos. Los productos nuevos cuentan con 6 meses de garantía de tienda."
     },
     {
-      question: "¿Cómo funciona la entrega y el pago?",
-      answer: "Coordinamos de manera personalizada. Podés retirar por nuestra zona o acordamos un punto de encuentro seguro. Al momento de encontrarnos, revisamos el estado de los juegos y realizamos el pago o cobro en efectivo o transferencia en el acto."
+      question: "¿Cómo funciona el canje y la compra de juegos?",
+      answer: "Tomamos tus juegos físicos usados como parte de pago (canje) para llevarte otros títulos, consolas o accesorios, o bien te compramos lotes enteros de juegos. Cotizamos todo en el acto por WhatsApp. *(Nota: no compramos consolas usadas excepto casos muy excepcionales con una inspección exahustiva previa*."
     },
     {
-      question: "¿Cómo me aseguro de que el juego usado funciona bien?",
-      answer: "Todos nuestros títulos pasan por un riguroso testeo antes de publicarse. Para tu total tranquilidad, al momento de la entrega probamos el juego juntos en la consola demostrando su perfecto funcionamiento. Al ser productos usados y verificados en el acto, las ventas son definitivas y no realizamos cambios posteriores."
+      question: "¿Hacen envíos, cómo se paga y se retira?",
+      answer: "Hacemos envíos seguros a todo el país para juegos y accesorios. Para consolas recomendamos retiro presencial o si preferís envío a través de mensajería privada abonando el seguro correspondiente, coordinamos punto de encuentro o retiro por nuestra zona. Podés abonar en efectivo, transferencia o billeteras virtuales."
     },
     {
-      question: "¿Puedo vender un lote completo si algunos juegos no son tan populares?",
-      answer: "Sí, compramos lotes completos. Al tasarlos, hacemos un promedio considerando los títulos de alta demanda y los de menor rotación comercial, ofreciéndote un valor global justo por toda tu colección."
-    },
-    {
-      question: "¿Traen juegos a pedido?",
-      answer: "Nuestro catálogo se actualiza constantemente con nuevos ingresos. Si buscás una joya específica que no tenemos en stock en este momento, escribinos y te avisamos apenas ingrese."
+      question: "¿Venden productos de PlayStation o Xbox?",
+      answer: "Nuestro stock principal es de Nintendo, pero conseguimos consolas, juegos y accesorios de PlayStation, Xbox y más plataformas a pedido. ¡Escribinos y te lo cotizamos!"
     }
   ];
 
