@@ -40,20 +40,14 @@ const Hero: React.FC = () => {
               className="
                 font-orbitron font-black
                 text-4xl sm:text-5xl xl:text-6xl
-                leading-[1.05]
+                leading-[1.1]
                 tracking-tight
-                text-gray-950
-                mb-7
+                text-gray-800
+                mb-6
               "
             >
-              Tu próxima
-              <br />
-              <span className="text-brand-red">aventura</span>{" "}
-              <br className="sm:hidden" />
-              empieza en
-              <br />
-              <span className="text-brand-cyan font-orbitron font-black">Enter</span>
-              <span className="text-brand-red font-orbitron font-black">Game</span>
+              Entrá al Juego<br />
+              con <span className="text-brand-cyan font-orbitron font-black">Enter</span><span className="text-brand-red font-orbitron font-black">Game</span>
             </h1>
 
             {/* Descripción */}
