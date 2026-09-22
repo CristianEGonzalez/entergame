@@ -16,7 +16,7 @@ const Vender: React.FC = () => {
     {
       id: 2,
       icon: "⚖️",
-      title: "Cotización Realista",
+      title: "Cotización",
       desc: "Tasamos considerando la demanda y valor de cada título. En el caso de lotes grandes, calculamos una oferta global, contemplando que algunos juegos pueden tener menor rotación comercial.",
       borderColor: "border-red-500",
       glow: "group-hover:shadow-[0_0_30px_rgba(255,48,40,0.3)]"
@@ -49,7 +49,7 @@ const Vender: React.FC = () => {
           </span>
           
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 text-center tracking-tight leading-tight">
-            Convertí tu colección <br className="hidden sm:block" /> en efectivo
+            Convertí tus juegos <br className="hidden sm:block" /> en efectivo
           </h2>
           
           <p className="text-lg text-gray-300 max-w-2xl text-center mb-16 font-light leading-relaxed">
@@ -80,9 +80,9 @@ const Vender: React.FC = () => {
           <div className="flex justify-center w-full">
             <button
               onClick={() => setContactOpen(true)}
-              className="group relative inline-flex items-center justify-center px-10 py-4 font-bold text-white bg-red-600 rounded-full overflow-hidden transition-all hover:scale-105 shadow-[0_0_20px_rgba(220,38,38,0.4)] cursor-pointer"
+              className="group relative inline-flex items-center justify-center px-10 py-4 font-bold text-white bg-red-600 rounded-2xl overflow-hidden transition-all hover:scale-105 shadow-[0_0_20px_rgba(220,38,38,0.4)] cursor-pointer"
             >
-              <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full group-hover:w-64 group-hover:h-56 opacity-10"></span>
+              <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-2xl group-hover:w-64 group-hover:h-56 opacity-10"></span>
               <span className="relative flex items-center gap-2">
                 Quiero vender mis juegos <span className="group-hover:translate-x-1 transition-transform">→</span>
               </span>
