@@ -5,9 +5,9 @@ const Footer: React.FC = () => {
 
   const footerLinks = [
     { name: "Catálogo", href: "#catalogo" },
-    { name: "Canje", href: "#canje" },
     { name: "Comprar", href: "#comprar" },
     { name: "Vender", href: "#vender" },
+    { name: "Canje", href: "#canje" },
     { name: "FAQ", href: "#faq" },
   ];
 
