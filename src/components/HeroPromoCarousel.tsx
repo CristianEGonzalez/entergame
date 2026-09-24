@@ -26,7 +26,7 @@ const slides: PromoSlide[] = [
     id: 2,
     tag: "Nueva Generación",
     title: "Nintendo Switch 2 The Legend of Zelda 40th Anniversary Edition",
-    description: "Da el salto generacional con potencia mejorada y máxima diversión.",
+    description: "Preventa exclusiva: Edición especial de la consola Nintendo Switch con temática de Zelda, celebrando 40 años de aventuras.",
     highlight: "Stock disponible en tienda",
     badgeColor: "bg-brand-cyan text-white",
     buttonText: "Ver Consola",
@@ -45,7 +45,7 @@ const HeroPromoCarousel: React.FC = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length);
-    }, 5000);
+    }, 10000);
     return () => clearInterval(timer);
   }, []);
 
