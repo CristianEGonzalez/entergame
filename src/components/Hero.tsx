@@ -1,6 +1,6 @@
 import React from "react";
 import ContactButton from "./ContactButton";
-import CanjeLoopGraphic from "./CanjeLoopGraphic";
+// import CanjeLoopGraphic from "./CanjeLoopGraphic";
 import HeroPromoCarousel from "./HeroPromoCarousel";
 
 const Hero: React.FC = () => {
