@@ -14,24 +14,34 @@ interface PromoSlide {
 const slides: PromoSlide[] = [
   {
     id: 1,
-    tag: "Preventa Exclusiva",
-    title: "SORTEO Zelda: Ocarina of Time",
-    description: "¡Cada 30 participantes hay un ganador, y vos podés ser uno de ellos!",
-    highlight: "¡Preventa y Sorteo habilitados!",
+    tag: "Sorteo Mario Odyssey",
+    title: "SORTEO Super Mario Odyssey",
+    description: "Participá gratis en el sorteo de Super Mario Odyssey y ganá una experiencia única en el mundo de Mario.",
+    highlight: "Sorteo habilitado en nuestro Instagram @entergame_ok!",
     badgeColor: "bg-brand-red text-white",
-    buttonText: "Participar / Reservar",
-    buttonUrl: "https://wa.me/5491134567890?text=Hola%2C+quiero+participar+en+el+sorteo+de+Zelda%3A+Ocarina+of+Time",
+    buttonText: "Participar",
+    buttonUrl: "https://www.instagram.com/p/Ddu5cMUleUr/",
   },
-  {
-    id: 2,
-    tag: "Nueva Generación",
-    title: "Nintendo Switch 2 The Legend of Zelda 40th Anniversary Edition",
-    description: "Preventa exclusiva: Edición especial de la consola Nintendo Switch con temática de Zelda, celebrando 40 años de aventuras.",
-    highlight: "Stock disponible en tienda",
-    badgeColor: "bg-brand-cyan text-white",
-    buttonText: "Ver Consola",
-    buttonUrl: "https://www.instagram.com/p/DdsB6f1FZra/",
-  },
+  // {
+  //   id: 2,
+  //   tag: "Sorteo Especial",
+  //   title: "SORTEO Zelda: Ocarina of Time",
+  //   description: "¡Cada 30 participantes hay un ganador, y vos podés ser uno de ellos por sólo $5000!",
+  //   highlight: "¡Preventa y Sorteo habilitados!",
+  //   badgeColor: "bg-green-600 text-white",
+  //   buttonText: "Participar / Reservar",
+  //   buttonUrl: "https://wa.me/5491134567890?text=Hola%2C+quiero+participar+en+el+sorteo+de+Zelda%3A+Ocarina+of+Time",
+  // },
+  // {
+  //   id: 2,
+  //   tag: "Nueva Generación",
+  //   title: "Nintendo Switch 2 The Legend of Zelda 40th Anniversary Edition",
+  //   description: "Preventa exclusiva: Edición especial de la consola Nintendo Switch con temática de Zelda, celebrando 40 años de aventuras.",
+  //   highlight: "Stock disponible en tienda",
+  //   badgeColor: "bg-brand-cyan text-white",
+  //   buttonText: "Ver Consola",
+  //   buttonUrl: "https://www.instagram.com/p/DdsB6f1FZra/",
+  // }
 ];
 
 const HeroPromoCarousel: React.FC = () => {
