@@ -40,7 +40,7 @@ export const InstagramEmbedContainer: React.FC<InstagramEmbedContainerProps> = (
         - overflow-hidden: Corta todo lo que sobresalga de esta caja.
         - aspect-[1/1.1]: Define una altura controlada (un poco más alto que cuadrado) para que la imagen se vea bien pero no se coma la pantalla.
       */}
-      <div className="relative w-full max-w-[540px] overflow-hidden rounded-xl shadow-2xl aspect-[1/1.1]">
+      <div className="relative w-full max-w-135 overflow-hidden rounded-xl shadow-2xl aspect-[1/1.1]">
         
         {/* Contenido de Instagram - Posicionado Absolutamente */}
         {/* 
@@ -48,7 +48,7 @@ export const InstagramEmbedContainer: React.FC<InstagramEmbedContainerProps> = (
           - left-0 right-0 bottom-0: Ajusta el embed dentro de la máscara.
           - scale-[1.02]: Aumenta ligeramente el tamaño para rellenar los bordes de la máscara.
         */}
-        <div className="absolute -top-[50px] left-0 right-0 -bottom-[130px] scale-[1.02]">
+        <div className="absolute -top-12.5 left-0 right-0 -bottom-32.5 scale-[1.02]">
           <blockquote
             className="instagram-media"
             data-instgrm-permalink={`${permalink}?utm_source=ig_embed&utm_campaign=loading`}
