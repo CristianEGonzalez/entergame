@@ -66,6 +66,15 @@ const Header: React.FC = () => {
             </Link>
           ))}
 
+          {/* Enlace a App Sorteos (Desktop) */}
+          <Link
+            to="/sorteos"
+            className="text-cyan-400 hover:text-cyan-300 font-bold transition-colors duration-300 text-sm uppercase tracking-wider mr-6 flex items-center gap-1.5"
+          >
+            <span>🎰</span>
+            <span>App Sorteos</span>
+          </Link>
+
           {/* Enlace a Instagram (Desktop) */}
           <a
             href="https://instagram.com/entergame_ok"
@@ -131,6 +140,16 @@ const Header: React.FC = () => {
             {item}
           </Link>
         ))}
+
+        {/* Enlace a App Sorteos (Mobile) */}
+        <Link
+          to="/sorteos"
+          onClick={() => setMenuOpen(false)}
+          className="text-cyan-600 text-2xl font-orbitron font-bold uppercase tracking-widest relative pb-1 hover:text-cyan-500 transition-all duration-300 flex items-center gap-2"
+        >
+          <span>🎰</span>
+          <span>App Sorteos</span>
+        </Link>
 
         {/* Enlace a Instagram (Mobile) */}
         <a

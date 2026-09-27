@@ -1,14 +1,15 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   const footerLinks = [
-    { name: "Catálogo", href: "#catalogo" },
-    { name: "Comprar", href: "#comprar" },
-    { name: "Vender", href: "#vender" },
-    { name: "Canje", href: "#canje" },
-    { name: "FAQ", href: "#faq" },
+    { name: "Catálogo", href: "/#catalogo" },
+    { name: "Comprar", href: "/#comprar" },
+    { name: "Vender", href: "/#vender" },
+    { name: "Canje", href: "/#canje" },
+    { name: "FAQ", href: "/#faq" },
   ];
 
   return (
@@ -22,7 +23,9 @@ const Footer: React.FC = () => {
               <span className="text-brand-cyan">Enter</span>
               <span className="text-brand-red">Game</span>
             </h2>
-            <p className="max-w-sm leading-relaxed font-medium text-gray-400">Tu próxima aventura empieza acá. Nos especializamos en la compra, venta y canje de juegos físicos para Nintendo Switch.</p>
+            <p className="max-w-sm leading-relaxed font-medium text-gray-400">
+              Tu próxima aventura empieza acá. Nos especializamos en la compra, venta y canje de juegos físicos para Nintendo Switch.
+            </p>
           </div>
 
           {/* 2. Navegación Rápida */}
@@ -36,6 +39,16 @@ const Footer: React.FC = () => {
                   </a>
                 </li>
               ))}
+              {/* Enlace a App Sorteos */}
+              <li>
+                <Link
+                  to="/sorteos"
+                  className="inline-flex items-center gap-1.5 font-medium text-cyan-400 transition-colors hover:text-cyan-300"
+                >
+                  <span>🎰</span>
+                  <span>App Sorteos</span>
+                </Link>
+              </li>
             </ul>
           </div>
 
