@@ -53,12 +53,12 @@ export const InstagramCarousel: React.FC = () => {
       onMouseLeave={() => setIsPaused(false)} // Reanuda cuando el usuario saca el mouse
     >
       {/* Contenedor de la Tarjeta */}
-      <div className="relative w-full max-w-[420px] overflow-hidden rounded-2xl bg-white shadow-2xl border border-gray-100 transition-all duration-300">
+      <div className="relative w-full max-w-105 overflow-hidden rounded-2xl bg-white shadow-2xl border border-gray-100 transition-all duration-300">
         
         {/* Cabecera estilo Instagram */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-gray-50/90 backdrop-blur-sm">
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600 p-[2px] overflow-hidden">
+            <div className="h-9 w-9 rounded-full bg-linear-to-tr from-yellow-400 via-red-500 to-purple-600 p-0.5 overflow-hidden">
               <div className="flex h-full w-full items-center justify-center rounded-full bg-white overflow-hidden">
                 <img 
                   src={enterGameLogo} 
@@ -89,7 +89,7 @@ export const InstagramCarousel: React.FC = () => {
             alt="Publicación de EnterGame" 
             className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100 flex items-end p-6">
+          <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100 flex items-end p-6">
             <span className="w-full rounded-xl bg-white/25 backdrop-blur-md py-2.5 text-center text-xs font-bold text-white shadow-lg border border-white/20">
               Ver publicación en Instagram ↗
             </span>
@@ -98,14 +98,14 @@ export const InstagramCarousel: React.FC = () => {
 
         {/* Pie de tarjeta y Botón */}
         <div className="p-4 bg-white">
-          <p className="mb-3 text-xs font-medium text-gray-700 line-clamp-2 min-h-[32px]">
+          <p className="mb-3 text-xs font-medium text-gray-700 line-clamp-2 min-h-8">
             {currentPost.caption}
           </p>
           <a
             href={currentPost.permalink}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 py-3 text-center text-xs font-bold text-white shadow-md transition-all hover:opacity-95"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-purple-600 via-pink-600 to-orange-500 py-3 text-center text-xs font-bold text-white shadow-md transition-all hover:opacity-95"
           >
             Ir al post de Instagram 🚀
           </a>
