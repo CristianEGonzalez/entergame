@@ -2,7 +2,7 @@ import React from "react";
 import ContactButton from "./ContactButton";
 // import CanjeLoopGraphic from "./CanjeLoopGraphic";
 // import HeroPromoCarousel from "./HeroPromoCarousel";
-import InstagramEmbedContainer from "./InstagramEmbedContainer";
+import InstagramCarousel from "./InstagramCarousel";
 
 const Hero: React.FC = () => {
   const WHATSAPP_CHANNEL_URL = import.meta.env.VITE_WHATSAPP_CHANNEL_URL;
@@ -79,7 +79,7 @@ const Hero: React.FC = () => {
           {/* ======= COLUMNA DERECHA  ======= */}
           <div className="flex w-full items-center justify-center lg:justify-end">
             <div className="w-full max-w-135">
-              <InstagramEmbedContainer permalink="https://www.instagram.com/p/Ddu5cMUleUr/" />
+              <InstagramCarousel />
             </div>
           </div>
           
