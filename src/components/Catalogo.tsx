@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ContactModal from "./ContactModal";
 
-interface Game {
+interface Product {
   id: number;
   title: string;
   src: string;
@@ -13,7 +13,7 @@ interface Game {
 
 const Catalogo: React.FC = () => {
   const [contactOpen, setContactOpen] = useState<boolean>(false);
-  const [games, setGames] = useState<Game[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   // URL de API de Google Sheets
@@ -27,61 +27,83 @@ const Catalogo: React.FC = () => {
       })
       .then((data) => {
         if (Array.isArray(data)) {
-          setGames(data);
+          setProducts(data);
         } else {
           console.error("La API no devolvió una lista válida:", data);
-          setGames([]);
+          setProducts([]);
         }
         setLoading(false);
       })
       .catch((err) => {
         console.error("Error al cargar el catálogo desde Google Sheets:", err);
-        setGames([]);
+        setProducts([]);
         setLoading(false);
       });
   }, []);
 
   // FILTRADO GENERAL: stock >= 1 y título válido
-  const validGames = games.filter((game) => {
-    const stockNum = Number(game.stock) || 0;
-    return stockNum >= 1 && game.title && game.title.trim() !== "";
+  const validProducts = products.filter((product) => {
+    const stockNum = Number(product.stock) || 0;
+    return stockNum >= 1 && product.title && product.title.trim() !== "";
   });
 
   // SEPARACIÓN POR CATEGORÍAS
-  const consolas = validGames.filter((g) => (g.category || "").toLowerCase().trim() === "consola");
-  const juegosNuevos = validGames.filter((g) => (g.category || "").toLowerCase().trim() === "juego-nuevo");
-  const juegosUsados = validGames.filter((g) => (g.category || "").toLowerCase().trim() === "juego-usado");
-  const accesorios = validGames.filter((g) => (g.category || "").toLowerCase().trim() === "accesorio");
+  const consolas = validProducts.filter((p) => (p.category || "").toLowerCase().trim() === "consola");
+  const juegosNuevos = validProducts.filter((p) => (p.category || "").toLowerCase().trim() === "juego-nuevo");
+  const juegosUsados = validProducts.filter((p) => (p.category || "").toLowerCase().trim() === "juego-usado");
+  const accesorios = validProducts.filter((p) => (p.category || "").toLowerCase().trim() === "accesorio");
 
-  // Función reutilizable para renderizar una grilla de productos por sección
-  const renderProductGrid = (items: Game[]) => {
+  const renderProductGrid = (items: Product[]) => {
     if (items.length === 0) return null;
 
     return (
-      <div className="mx-auto mb-16 flex w-full max-w-6xl flex-wrap justify-center gap-8 md:gap-16">
-        {items.map((game) => {
-          const isReserved = game.status === "Reservado";
+      <div className="mx-auto mb-16 grid w-full max-w-7xl grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:gap-6">
+        {items.map((product) => {
+          const isReserved = product.status === "Reservado";
 
           return (
-            <div key={game.id} className={`flex w-[45%] max-w-60 flex-col sm:w-[30%] lg:w-[24%] ${isReserved ? "cursor-default opacity-90" : "group cursor-pointer"}`} onClick={() => !isReserved && setContactOpen(true)}>
-              {/* Portada / Imagen */}
-              <div className={`relative mb-4 aspect-2/3 transform overflow-hidden rounded-2xl border border-gray-100 transition-transform duration-500 ${isReserved ? "shadow-sm grayscale-30" : "shadow-lg group-hover:-translate-y-2 group-hover:shadow-2xl"}`}>
-                <img src={game.src} alt={game.title} className={`h-full w-full object-cover transition-transform duration-700 ${isReserved ? "" : "group-hover:scale-105"}`} />
+            <div 
+              key={product.id} 
+              className={`flex flex-col bg-white border border-gray-200 transition-all duration-300 ${isReserved ? "cursor-default opacity-75" : "group cursor-pointer hover:border-gray-400 hover:shadow-sm"}`} 
+              onClick={() => !isReserved && setContactOpen(true)}
+            >
+              {/* Imagen */}
+              <div className={`relative aspect-4/6 w-full overflow-hidden bg-gray-50 ${isReserved ? "grayscale-30" : ""}`}>
+                <img 
+                  src={product.src} 
+                  alt={product.title} 
+                  className={`h-full w-full object-cover transition-transform duration-500 ${isReserved ? "" : "group-hover:scale-105"}`} 
+                />
 
                 {/* === FRANJA DIAGONAL DE RESERVADO === */}
-                {isReserved && <div className="absolute top-6 -right-12 z-20 w-48 rotate-45 transform border-y border-amber-500 bg-amber-400 py-1.5 text-center text-xs font-black tracking-widest text-gray-900 uppercase shadow-lg sm:text-sm">Reservado</div>}
+                {isReserved && (
+                  <div className="absolute top-4 -right-10 z-20 w-36 rotate-45 transform border-y border-amber-500 bg-amber-400 py-1 text-center text-[10px] font-black tracking-widest text-gray-900 uppercase shadow-sm">
+                    Reservado
+                  </div>
+                )}
 
-                {/* Overlay al pasar el mouse */}
+                {/* Overlay sutil al pasar el mouse */}
                 {!isReserved && (
-                  <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/0 transition-colors duration-300 group-hover:bg-black/20">
-                    <span className="translate-y-4 transform rounded-full bg-red-600 px-4 py-2 text-sm font-bold text-white opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">Consultar</span>
+                  <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/0 transition-colors duration-300 group-hover:bg-black/10">
+                    <span className="translate-y-2 transform bg-white px-3 py-1 text-xs font-semibold text-gray-900 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 shadow-sm">
+                      Consultar
+                    </span>
                   </div>
                 )}
               </div>
 
-              {/* Info del producto */}
-              <span className={`mb-1 text-sm font-bold tracking-wider uppercase ${isReserved ? "text-gray-400" : "text-gray-500"}`}>$ {Number(game.price.toString().replace(/[^0-9]/g, "")).toLocaleString("en-US")}</span>
-              <h3 className={`text-lg leading-tight font-bold transition-colors md:text-xl ${isReserved ? "text-gray-500" : "text-gray-900 group-hover:text-red-600"}`}>{game.title}</h3>
+              {/* Contenedor de Info compacto y ordenado */}
+              <div className="flex flex-col grow justify-between p-3">
+                <p className={`font-sans text-xs font-normal line-clamp-2 leading-snug transition-colors mb-2 ${isReserved ? "text-gray-400" : "text-gray-800 group-hover:text-red-600"}`}>
+                  {product.title}
+                </p>
+                
+                <div className="mt-auto pt-2 border-t border-gray-100">
+                  <span className={`font-sans text-xs font-semibold tracking-tight ${isReserved ? "text-gray-400" : "text-gray-900"}`}>
+                    $ {Number(product.price.toString().replace(/[^0-9]/g, "")).toLocaleString("en-US")}
+                  </span>
+                </div>
+              </div>
             </div>
           );
         })}
@@ -94,14 +116,18 @@ const Catalogo: React.FC = () => {
       <section id="catalogo" className="relative w-full overflow-hidden bg-white px-4 py-24 font-sans lg:px-8">
         <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center">
           {/* === ENCABEZADO PRINCIPAL === */}
-          <span className="mb-4 inline-block w-fit rounded-full border border-red-100 bg-red-50 px-5 py-2 text-xs font-bold tracking-widest text-red-600 uppercase shadow-sm sm:text-sm">🔥 Catálogo Oficial</span>
+          <span className="mb-4 inline-block w-fit rounded-full border border-red-100 bg-red-50 px-5 py-2 text-xs font-bold tracking-widest text-red-600 uppercase shadow-sm sm:text-sm">
+            🔥 Catálogo Oficial
+          </span>
 
-          <h2 className="mb-6 text-center text-4xl leading-tight font-black tracking-tight text-gray-900 md:text-5xl lg:text-6xl">
+          <h2 className="mb-4 text-center text-3xl leading-tight font-black tracking-tight text-gray-900 md:text-5xl">
             Todo para tu Diversión
             <br className="hidden sm:block" /> en un Solo Lugar
           </h2>
 
-          <p className="mb-20 max-w-2xl text-center text-lg leading-relaxed font-medium text-gray-600">Explorá nuestros juegos nuevos y usados, consolas, y accesorios con stock actualizado en tiempo real.</p>
+          <p className="mb-20 max-w-2xl text-center text-sm md:text-base leading-relaxed font-medium text-gray-600">
+            Explorá nuestros juegos nuevos y usados, consolas, y accesorios con stock actualizado en tiempo real.
+          </p>
 
           {/* === ESTADO DE CARGA === */}
           {loading ? (
@@ -115,8 +141,8 @@ const Catalogo: React.FC = () => {
               {juegosUsados.length > 0 && (
                 <div className="mb-16 w-full">
                   <div className="mb-10 text-center">
-                    <h3 className="text-2xl font-black tracking-tight text-gray-900 md:text-3xl">👾 Juegos Usados</h3>
-                    <div className="mx-auto mt-2 h-1 w-16 rounded-full bg-red-600"></div>
+                    <h3 className="text-xl font-bold tracking-tight text-gray-900 md:text-2xl">👾 Juegos Usados</h3>
+                    <div className="mx-auto mt-2 h-0.5 w-12 rounded-full bg-red-600/60"></div>
                   </div>
                   {renderProductGrid(juegosUsados)}
                 </div>
@@ -126,8 +152,8 @@ const Catalogo: React.FC = () => {
               {juegosNuevos.length > 0 && (
                 <div className="mb-16 w-full">
                   <div className="mb-10 text-center">
-                    <h3 className="text-2xl font-black tracking-tight text-gray-900 md:text-3xl">🆕 Juegos Nuevos (Sellados)</h3>
-                    <div className="mx-auto mt-2 h-1 w-16 rounded-full bg-red-600"></div>
+                    <h3 className="text-xl font-bold tracking-tight text-gray-900 md:text-2xl">🆕 Juegos Nuevos (Sellados)</h3>
+                    <div className="mx-auto mt-2 h-0.5 w-12 rounded-full bg-red-600/60"></div>
                   </div>
                   {renderProductGrid(juegosNuevos)}
                 </div>
@@ -137,13 +163,11 @@ const Catalogo: React.FC = () => {
               {consolas.length > 0 && (
                 <div className="mb-16 w-full">
                   <div className="mb-10 text-center">
-                    <h3 className="text-2xl font-black tracking-tight text-gray-900 md:text-3xl">
+                    <h3 className="text-xl font-bold tracking-tight text-gray-900 md:text-2xl">
                       🎮 Consolas
-                      <br />
-                      <span className="mb-8 max-w-xl font-sans text-lg leading-relaxed font-medium text-gray-700 sm:text-xl">Precio expresado en dólares</span>
                     </h3>
-
-                    <div className="mx-auto mt-2 h-1 w-16 rounded-full bg-red-600"></div>
+                    <p className="mt-1 text-xs md:text-sm font-normal text-gray-400">Precio expresado en dólares</p>
+                    <div className="mx-auto mt-2 h-0.5 w-12 rounded-full bg-red-600/60"></div>
                   </div>
                   {renderProductGrid(consolas)}
                 </div>
@@ -153,8 +177,8 @@ const Catalogo: React.FC = () => {
               {accesorios.length > 0 && (
                 <div className="mb-16 w-full">
                   <div className="mb-10 text-center">
-                    <h3 className="text-2xl font-black tracking-tight text-gray-900 md:text-3xl">🎧 Accesorios</h3>
-                    <div className="mx-auto mt-2 h-1 w-16 rounded-full bg-red-600"></div>
+                    <h3 className="text-xl font-bold tracking-tight text-gray-900 md:text-2xl">🎧 Accesorios</h3>
+                    <div className="mx-auto mt-2 h-0.5 w-12 rounded-full bg-red-600/60"></div>
                   </div>
                   {renderProductGrid(accesorios)}
                 </div>
@@ -163,13 +187,13 @@ const Catalogo: React.FC = () => {
           )}
 
           {/* === BANNER DE CONSULTA === */}
-          <div className="mt-8 flex w-full flex-col items-center justify-between gap-8 rounded-4xl border border-gray-200 bg-gray-50 p-8 text-center md:flex-row md:p-12 md:text-left">
+          <div className="mt-12 flex w-full flex-col items-center justify-between gap-6 rounded-3xl border border-gray-100 bg-gray-50/60 p-8 md:flex-row md:p-10 md:text-left text-center">
             <div>
-              <h3 className="mb-3 text-2xl font-black tracking-tight text-gray-900 md:text-3xl">¿No encontrás lo que buscás?</h3>
-              <p className="max-w-xl text-lg font-medium text-gray-600">Traemos productos a pedido todas las semanas. Escribinos para consultar por que quieras que nosotros nos encargamos.</p>
+              <h3 className="mb-2 text-xl font-bold tracking-tight text-gray-900 md:text-2xl">¿No encontrás lo que buscás?</h3>
+              <p className="max-w-xl text-sm md:text-base font-normal text-gray-600">Traemos productos a pedido todas las semanas. Escribinos para consultar por lo que quieras que nosotros nos encargamos.</p>
             </div>
 
-            <button onClick={() => setContactOpen(true)} className="shrink-0 transform rounded-2xl bg-gray-900 px-10 py-4 text-lg font-bold text-white shadow-xl transition-all hover:-translate-y-1 hover:bg-black hover:shadow-gray-900/40">
+            <button onClick={() => setContactOpen(true)} className="shrink-0 transform rounded-xl bg-gray-900 px-8 py-3.5 text-sm font-bold text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-black">
               Consultar Stock
             </button>
           </div>
