@@ -435,7 +435,7 @@ const Sorteos: React.FC = () => {
                   className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 p-3.5 font-mono text-sm text-slate-700 placeholder-slate-400 transition-all focus:border-brand-cyan focus:bg-white focus:outline-none"
                 />
                 <button onClick={handleApplyText} className="w-full rounded-xl border border-cyan-300 bg-cyan-50 px-4 py-2.5 text-sm font-bold text-brand-cyan shadow-sm transition-all hover:bg-cyan-100">
-                  Guardar Lista
+                  Cargar Participantes
                 </button>
               </div>
             ) : (
