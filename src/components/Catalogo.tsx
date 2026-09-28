@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ContactModal from "./ContactModal";
+import ProductModal from "./ProductModal";
 
 interface Product {
   id: number;
@@ -15,6 +16,10 @@ const Catalogo: React.FC = () => {
   const [contactOpen, setContactOpen] = useState<boolean>(false);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+
+  // Estados para el ProductModal (vista previa del producto)
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isProductModalOpen, setIsProductModalOpen] = useState<boolean>(false);
 
   // URL de API de Google Sheets
   const SHEET_API_URL = import.meta.env.VITE_GOOGLE_SCRIPT_URL;
@@ -65,7 +70,12 @@ const Catalogo: React.FC = () => {
             <div 
               key={product.id} 
               className={`flex flex-col bg-white border border-gray-200 transition-all duration-300 ${isReserved ? "cursor-default opacity-75" : "group cursor-pointer hover:border-gray-400 hover:shadow-sm"}`} 
-              onClick={() => !isReserved && setContactOpen(true)}
+              onClick={() => {
+                if (!isReserved) {
+                  setSelectedProduct(product);
+                  setIsProductModalOpen(true);
+                }
+              }}
             >
               {/* Imagen */}
               <div className={`relative aspect-4/6 w-full overflow-hidden bg-gray-50 ${isReserved ? "grayscale-30" : ""}`}>
@@ -86,7 +96,7 @@ const Catalogo: React.FC = () => {
                 {!isReserved && (
                   <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/0 transition-colors duration-300 group-hover:bg-black/10">
                     <span className="translate-y-2 transform bg-white px-3 py-1 text-xs font-semibold text-gray-900 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 shadow-sm">
-                      Consultar
+                      Ver detalle
                     </span>
                   </div>
                 )}
@@ -99,7 +109,7 @@ const Catalogo: React.FC = () => {
                 </p>
                 
                 <div className="mt-auto pt-2 border-t border-gray-100">
-                  <span className={`font-sans text-xs font-semibold tracking-tight ${isReserved ? "text-gray-400" : "text-gray-900"}`}>
+                  <span className={`font-sans text-xs sm:text-sm font-semibold tracking-tight ${isReserved ? "text-gray-400" : "text-gray-900"}`}>
                     $ {Number(product.price.toString().replace(/[^0-9]/g, "")).toLocaleString("en-US")}
                   </span>
                 </div>
@@ -200,6 +210,17 @@ const Catalogo: React.FC = () => {
         </div>
       </section>
 
+      {/* Modal de Detalle Rápido del Producto */}
+      <ProductModal 
+        isOpen={isProductModalOpen}
+        onClose={() => setIsProductModalOpen(false)}
+        product={selectedProduct}
+        onOpenContactWithProduct={(_, __) => {
+          setContactOpen(true);
+        }}
+      />
+
+      {/* Modal de Contacto General */}
       <ContactModal isOpen={contactOpen} onClose={() => setContactOpen(false)} />
     </>
   );
