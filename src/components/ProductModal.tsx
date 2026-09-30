@@ -7,7 +7,7 @@ interface Product {
   src: string;
   price: string;
   status: string;
-  description?: string; // Nuevo atributo opcional para la descripción
+  description?: string;
 }
 
 interface ProductModalProps {
@@ -45,26 +45,26 @@ const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, product, o
       }`}
     >
       <div
-        className={`relative w-full max-w-2xl bg-white border border-gray-200 rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row transition-all duration-300 transform ${
+        className={`relative w-full max-w-2xl max-h-[90vh] bg-white border border-gray-200 rounded-3xl shadow-2xl overflow-y-auto md:overflow-hidden flex flex-col md:flex-row transition-all duration-300 transform ${
           isOpen ? "scale-100 translate-y-0" : "scale-95 translate-y-4"
         }`}
       >
         {/* Barra superior estilo Nintendo */}
-        <div className="absolute top-0 left-0 w-full h-1.5 flex z-20">
+        <div className="sticky top-0 left-0 w-full h-1.5 flex z-30">
           <div className="w-1/2 h-full bg-cyan-400"></div>
           <div className="w-1/2 h-full bg-red-500"></div>
         </div>
 
-        {/* Botón de cerrar */}
+        {/* Botón de cerrar (Fijo/Sticky para que siempre esté a mano en celular) */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors text-lg font-bold p-2 z-20 bg-white/80 rounded-full backdrop-blur-xs"
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-900 transition-colors text-lg font-bold p-2 z-30 bg-white/90 hover:bg-white rounded-full shadow-sm backdrop-blur-xs"
         >
           ✕
         </button>
 
-        {/* === COLUMNA IZQUIERDA: IMAGEN === */}
-        <div className={`relative w-full md:w-1/2 md:aspect-auto flex items-center justify-center bg-gray-50 p-6 border-b md:border-b-0 md:border-r border-gray-100 overflow-hidden ${product.status === "Reservado" ? "grayscale-30" : ""}`}>
+        {/* === COLUMNA IZQUIERDA: IMAGEN (Altura controlada en celular para que no desborde) === */}
+        <div className={`relative w-full md:w-1/2 h-64 md:h-auto flex items-center justify-center bg-gray-50 p-6 border-b md:border-b-0 md:border-r border-gray-100 shrink-0 overflow-hidden ${product.status === "Reservado" ? "grayscale-30" : ""}`}>
           <img 
             src={product.src} 
             alt={product.title} 
@@ -78,7 +78,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, product, o
         </div>
 
         {/* === COLUMNA DERECHA: INFORMACIÓN Y ACCIONES === */}
-        <div className="w-full md:w-1/2 p-6 md:p-8 flex flex-col justify-between font-sans mt-2 md:mt-0">
+        <div className="w-full md:w-1/2 p-6 md:p-8 flex flex-col justify-between font-sans">
           <div>
             <span className="font-sans text-[10px] font-bold tracking-widest text-red-500 uppercase mb-1.5 block">
               Detalle del Artículo
@@ -97,7 +97,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, product, o
               </span>
             </div>
 
-            {/* Descripción condicional (Solo se renderiza si el producto tiene texto en el Google Sheet) */}
+            {/* Descripción condicional */}
             {product.description && product.description.trim() !== "" && (
               <div className="mb-4 bg-gray-50/80 border border-gray-100 rounded-xl p-3">
                 <p className="font-sans text-xs text-gray-600 leading-relaxed">
@@ -111,7 +111,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, product, o
             </p>
           </div>
 
-          <div className="w-full flex flex-col gap-2.5">
+          <div className="w-full flex flex-col gap-2.5 pt-2">
             <button
               onClick={() => {
                 onClose();
