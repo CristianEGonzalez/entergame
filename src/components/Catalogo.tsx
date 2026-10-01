@@ -24,17 +24,26 @@ const Catalogo: React.FC = () => {
   const [isProductModalOpen, setIsProductModalOpen] = useState<boolean>(false);
 
   // --- ESTADOS DE FILTRADO (DESACOPLADOS) ---
-  
-  // 1. Estado de selección TEMPORAL (lo que el usuario toca en los botones)
   const [tempPlatform, setTempPlatform] = useState<string>("Todas");
   const [tempCategory, setTempCategory] = useState<string>("todas");
 
-  // 2. Estado de filtrado APLICADO (lo que se muestra en la grilla actualmente)
   const [appliedPlatform, setAppliedPlatform] = useState<string>("Todas");
   const [appliedCategory, setAppliedCategory] = useState<string>("todas");
 
   // Estado para abrir/cerrar el panel de filtros en dispositivos móviles
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState<boolean>(false);
+
+  // Efecto para bloquear el scroll del body cuando el modal móvil de filtros está abierto
+  useEffect(() => {
+    if (isMobileFilterOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isMobileFilterOpen]);
 
   // URL de API de Google Sheets
   const SHEET_API_URL = import.meta.env.VITE_GOOGLE_SCRIPT_URL;
@@ -70,19 +79,15 @@ const Catalogo: React.FC = () => {
   };
 
   // --- LÓGICA DE APLICACIÓN DE FILTROS ---
-
-  // Determinar si hay filtros pendientes de aplicar (para mostrar el botón "Aplicar")
   const hasUnappliedFilters = tempPlatform !== appliedPlatform || tempCategory !== appliedCategory;
 
-  // Función principal que aplica los filtros seleccionados y actualiza la grilla
   const handleApplyFilters = () => {
     setAppliedPlatform(tempPlatform);
     setAppliedCategory(tempCategory);
-    setIsMobileFilterOpen(false); // Cierra el modal en móvil al aplicar
-    scrollToCatalogoTop(); // Vuelve al inicio para ver resultados
+    setIsMobileFilterOpen(false); 
+    scrollToCatalogoTop(); 
   };
 
-  // Función para restablecer todos los filtros a "Todos"
   const handleResetFilters = () => {
     setTempPlatform("Todas");
     setTempCategory("todas");
@@ -92,7 +97,7 @@ const Catalogo: React.FC = () => {
     scrollToCatalogoTop();
   };
 
-  // FILTRADO GENERAL (Base para obtener plataformas únicas y productos válidos)
+  // FILTRADO GENERAL
   const validProducts = products.filter((product) => {
     const stockNum = Number(product.stock) || 0;
     const status = (product.status || "").trim();
@@ -110,7 +115,7 @@ const Catalogo: React.FC = () => {
     )
   );
 
-  // --- APLICAR FILTROS (Usando los estados APLICADOS) ---
+  // --- APLICAR FILTROS ---
   const filteredProducts = validProducts.filter((product) => {
     const matchesPlatform = 
       appliedPlatform === "Todas" || 
@@ -124,7 +129,6 @@ const Catalogo: React.FC = () => {
     return matchesPlatform && matchesCategory;
   });
 
-  // SEPARACIÓN POR CATEGORÍAS PARA MOSTRAR EN SECCIONES SI ELIJE "TODAS"
   const consolas = filteredProducts.filter((p) => (p.category || "").toLowerCase().trim() === "consola");
   const juegosNuevos = filteredProducts.filter((p) => (p.category || "").toLowerCase().trim() === "juego-nuevo");
   const juegosUsados = filteredProducts.filter((p) => (p.category || "").toLowerCase().trim() === "juego-usado");
@@ -151,7 +155,6 @@ const Catalogo: React.FC = () => {
                 }
               }}
             >
-              {/* Imagen */}
               <div className={`relative aspect-4/6 w-full overflow-hidden bg-gray-50 ${isReserved ? "grayscale-30" : ""}`}>
                 <img 
                   src={product.src} 
@@ -182,7 +185,6 @@ const Catalogo: React.FC = () => {
                 )}
               </div>
 
-              {/* Contenedor de Info */}
               <div className="flex flex-col grow justify-between p-3.5">
                 <div>
                   <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1">
@@ -205,14 +207,12 @@ const Catalogo: React.FC = () => {
     );
   };
 
-  // Contenido interno de los filtros (usado en Sidebar Desktop y Drawer Móvil)
   const renderFilterContent = () => (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between border-b border-gray-200 pb-4">
         <h3 className="font-bold text-gray-900 text-sm flex items-center gap-2">
           🎛️ Filtrar Productos
         </h3>
-        {/* Botón "Limpiar" visible si hay filtros aplicados */}
         {(appliedPlatform !== "Todas" || appliedCategory !== "todas") && (
           <button 
             onClick={handleResetFilters}
@@ -223,7 +223,6 @@ const Catalogo: React.FC = () => {
         )}
       </div>
 
-      {/* 1. Filtro por Categoría (Usando tempCategory) */}
       <div>
         <label className="text-xs font-bold text-gray-700 uppercase tracking-wider block mb-3">
           Categoría
@@ -240,7 +239,7 @@ const Catalogo: React.FC = () => {
             return (
               <button
                 key={cat.id}
-                onClick={() => setTempCategory(cat.id)} // Solo actualiza el estado temporal
+                onClick={() => setTempCategory(cat.id)}
                 className={`text-left text-xs font-medium px-3.5 py-2.5 rounded-xl transition-all flex items-center justify-between ${
                   isActive 
                     ? "bg-red-600 text-white font-bold shadow-sm" 
@@ -254,7 +253,6 @@ const Catalogo: React.FC = () => {
         </div>
       </div>
 
-      {/* 2. Filtro por Plataforma (Usando tempPlatform) */}
       {!loading && availablePlatforms.length > 0 && (
         <div className="border-t border-gray-200 pt-5">
           <label className="text-xs font-bold text-gray-700 uppercase tracking-wider block mb-3">
@@ -262,7 +260,7 @@ const Catalogo: React.FC = () => {
           </label>
           <div className="flex flex-wrap lg:flex-col gap-1.5">
             <button
-              onClick={() => setTempPlatform("Todas")} // Solo actualiza el estado temporal
+              onClick={() => setTempPlatform("Todas")}
               className={`text-left text-xs font-medium px-3.5 py-2 rounded-xl transition-all ${
                 tempPlatform === "Todas"
                   ? "bg-gray-900 text-white font-bold shadow-sm"
@@ -276,7 +274,7 @@ const Catalogo: React.FC = () => {
               return (
                 <button
                   key={platform}
-                  onClick={() => setTempPlatform(platform)} // Solo actualiza el estado temporal
+                  onClick={() => setTempPlatform(platform)}
                   className={`text-left text-xs font-medium px-3.5 py-2 rounded-xl transition-all ${
                     isActive
                       ? "bg-gray-900 text-white font-bold shadow-sm"
@@ -291,7 +289,6 @@ const Catalogo: React.FC = () => {
         </div>
       )}
 
-      {/* --- BOTÓN "APLICAR FILTROS" (Exclusivo para PC/Sticky) --- */}
       {hasUnappliedFilters && (
         <div className="border-t border-gray-200 pt-5 mt-auto lg:block hidden">
           <button
@@ -309,44 +306,36 @@ const Catalogo: React.FC = () => {
     <>
       <section id="catalogo" className="relative w-full bg-white px-4 py-24 font-sans lg:px-8">
         <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center">
-          {/* === ENCABEZADO PRINCIPAL === */}
           <span className="mb-4 inline-block w-fit rounded-full border border-red-100 bg-red-50 px-5 py-2 text-xs font-bold tracking-widest text-red-600 uppercase shadow-sm sm:text-sm">
             🔥 Catálogo Oficial
           </span>
 
           <h2 className="mb-4 text-center text-3xl leading-tight font-black tracking-tight text-gray-900 md:text-5xl">
-            <span className="text-brand-cyan font-orbitron font-black"> Enter</span>
-            <span className="text-brand-red font-orbitron font-black">Game</span>
+            Todo para tu Diversión
+            <br className="hidden sm:block" /> en un Solo Lugar
           </h2>
 
           <p className="mb-12 max-w-2xl text-center text-sm md:text-base leading-relaxed font-medium text-gray-600">
             Explorá nuestros juegos nuevos y usados, consolas, y accesorios con stock actualizado en tiempo real.
           </p>
 
-          {/* === LAYOUT DE E-COMMERCE === */}
           <div className="w-full flex flex-col lg:flex-row gap-8 items-start">
-            
-            {/* === SIDEBAR DE FILTROS PARA DESKTOP (STICKY REAL + BOTÓN APLICAR) === */}
             <aside className="hidden lg:flex w-72 shrink-0 bg-gray-50/90 border border-gray-200/80 rounded-3xl p-6 shadow-xs sticky top-28 flex-col">
               {renderFilterContent()}
             </aside>
 
-            {/* === CONTENIDO PRINCIPAL / GRILLA === */}
             <div className="grow w-full">
-              {/* Barra superior de resultados + Botón de filtros para celular */}
               <div className="flex items-center justify-between bg-gray-50/60 border border-gray-100 rounded-2xl px-5 py-3 mb-8">
                 <span className="text-xs font-medium text-gray-500">
                   Mostrando <strong className="text-gray-900">{filteredProducts.length}</strong> artículos
                 </span>
                 
                 <div className="flex items-center gap-3">
-                  {/* Botón que dispara el modal de filtros en móvil */}
                   <button
                     onClick={() => setIsMobileFilterOpen(true)}
                     className="lg:hidden flex items-center gap-1.5 bg-gray-900 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold shadow-sm"
                   >
                     <span>🎛️</span> Filtrar
-                    {/* Indicador visual si hay filtros APLICADOS */}
                     {(appliedPlatform !== "Todas" || appliedCategory !== "todas") && (
                       <span className="w-2 h-2 rounded-full bg-red-500"></span>
                     )}
@@ -361,7 +350,6 @@ const Catalogo: React.FC = () => {
                 </div>
               </div>
 
-              {/* === ESTADO DE CARGA === */}
               {loading ? (
                 <div className="flex flex-col items-center justify-center py-24">
                   <div className="mb-4 h-12 w-12 animate-spin rounded-full border-4 border-red-600 border-t-transparent"></div>
@@ -439,16 +427,13 @@ const Catalogo: React.FC = () => {
                 </div>
               )}
             </div>
-
           </div>
 
-          {/* === BANNER DE CONSULTA === */}
           <div className="mt-16 flex w-full flex-col items-center justify-between gap-6 rounded-3xl border border-gray-100 bg-gray-50/60 p-8 md:flex-row md:p-10 md:text-left text-center">
             <div>
               <h3 className="mb-2 text-xl font-bold tracking-tight text-gray-900 md:text-2xl">¿No encontrás lo que buscás?</h3>
               <p className="max-w-xl text-sm md:text-base font-normal text-gray-600">Traemos productos a pedido todas las semanas. Escribinos para consultar por lo que quieras que nosotros nos encargamos.</p>
             </div>
-
             <button onClick={() => setContactOpen(true)} className="shrink-0 transform rounded-xl bg-gray-900 px-8 py-3.5 text-sm font-bold text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-black">
               Consultar Stock
             </button>
@@ -456,7 +441,6 @@ const Catalogo: React.FC = () => {
         </div>
       </section>
 
-      {/* === BOTÓN FLOTANTE FIJO PARA MÓVIL (Acompaña siempre abajo a la derecha) === */}
       <div className="lg:hidden fixed bottom-6 right-6 z-50">
         <button
           onClick={() => setIsMobileFilterOpen(true)}
@@ -469,7 +453,6 @@ const Catalogo: React.FC = () => {
         </button>
       </div>
 
-      {/* === MODAL / DRAWER DE FILTROS PARA MÓVIL (Con botón Aplicar) === */}
       {isMobileFilterOpen && (
         <div className="fixed inset-0 z-9999 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-xs p-0 sm:p-4 transition-opacity">
           <div className="w-full max-w-lg bg-white rounded-t-3xl sm:rounded-3xl p-6 max-h-[85vh] overflow-y-auto shadow-2xl animate-in slide-in-from-bottom duration-300">
@@ -497,7 +480,6 @@ const Catalogo: React.FC = () => {
         </div>
       )}
 
-      {/* Modal de Detalle Rápido del Producto */}
       <ProductModal 
         isOpen={isProductModalOpen}
         onClose={() => setIsProductModalOpen(false)}
@@ -507,7 +489,6 @@ const Catalogo: React.FC = () => {
         }}
       />
 
-      {/* Modal de Contacto General */}
       <ContactModal isOpen={contactOpen} onClose={() => setContactOpen(false)} />
     </>
   );
