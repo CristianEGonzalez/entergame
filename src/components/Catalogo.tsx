@@ -7,9 +7,11 @@ interface Product {
   title: string;
   src: string;
   price: string;
-  status: string; // "Reservado" o vacío
-  stock: number; // Se renderizan solo con stock >= 1
+  status: string; // "Reservado", "Preventa", "Pedido", "Oferta" o vacío
+  stock: number; // Se renderizan con stock >= 1 o si son preventa/pedido
   category?: string; // "consola" | "juego-nuevo" | "juego-usado" | "accesorio"
+  platform?: string; // "Nintendo Switch", "PlayStation 5", etc.
+  description?: string;
 }
 
 const Catalogo: React.FC = () => {
@@ -20,6 +22,9 @@ const Catalogo: React.FC = () => {
   // Estados para el ProductModal (vista previa del producto)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isProductModalOpen, setIsProductModalOpen] = useState<boolean>(false);
+
+  // Estado para el filtro de plataforma (por defecto "Todas")
+  const [selectedPlatform, setSelectedPlatform] = useState<string>("Todas");
 
   // URL de API de Google Sheets
   const SHEET_API_URL = import.meta.env.VITE_GOOGLE_SCRIPT_URL;
@@ -46,17 +51,37 @@ const Catalogo: React.FC = () => {
       });
   }, []);
 
-  // FILTRADO GENERAL: stock >= 1 y título válido
+  // FILTRADO GENERAL: stock >= 1 O status Preventa/Pedido, y título válido
   const validProducts = products.filter((product) => {
     const stockNum = Number(product.stock) || 0;
-    return stockNum >= 1 && product.title && product.title.trim() !== "";
+    const status = (product.status || "").trim();
+    
+    const isPreventaOrPedido = status === "Preventa" || status === "Pedido";
+    const hasStock = stockNum >= 1;
+
+    return (hasStock || isPreventaOrPedido) && product.title && product.title.trim() !== "";
   });
 
-  // SEPARACIÓN POR CATEGORÍAS
-  const consolas = validProducts.filter((p) => (p.category || "").toLowerCase().trim() === "consola");
-  const juegosNuevos = validProducts.filter((p) => (p.category || "").toLowerCase().trim() === "juego-nuevo");
-  const juegosUsados = validProducts.filter((p) => (p.category || "").toLowerCase().trim() === "juego-usado");
-  const accesorios = validProducts.filter((p) => (p.category || "").toLowerCase().trim() === "accesorio");
+  // OBTENER PLATAFORMAS ÚNICAS DINÁMICAMENTE DE LOS PRODUCTOS
+  const availablePlatforms = Array.from(
+    new Set(
+      validProducts
+        .map((p) => p.platform?.trim())
+        .filter((platform): platform is string => Boolean(platform && platform !== ""))
+    )
+  );
+
+  // APLICAR FILTRO DE PLATAFORMA
+  const filteredProducts = validProducts.filter((product) => {
+    if (selectedPlatform === "Todas") return true;
+    return (product.platform || "").trim().toLowerCase() === selectedPlatform.toLowerCase();
+  });
+
+  // SEPARACIÓN POR CATEGORÍAS (Usando los productos ya filtrados por plataforma)
+  const consolas = filteredProducts.filter((p) => (p.category || "").toLowerCase().trim() === "consola");
+  const juegosNuevos = filteredProducts.filter((p) => (p.category || "").toLowerCase().trim() === "juego-nuevo");
+  const juegosUsados = filteredProducts.filter((p) => (p.category || "").toLowerCase().trim() === "juego-usado");
+  const accesorios = filteredProducts.filter((p) => (p.category || "").toLowerCase().trim() === "accesorio");
 
   const renderProductGrid = (items: Product[]) => {
     if (items.length === 0) return null;
@@ -65,6 +90,8 @@ const Catalogo: React.FC = () => {
       <div className="mx-auto mb-16 grid w-full max-w-7xl grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:gap-6">
         {items.map((product) => {
           const isReserved = product.status === "Reservado";
+          const isOffer = product.status === "Oferta";
+          const isPreventaOrPedido = product.status === "Preventa" || product.status === "Pedido";
 
           return (
             <div 
@@ -89,6 +116,20 @@ const Catalogo: React.FC = () => {
                 {isReserved && (
                   <div className="absolute top-4 -right-10 z-20 w-36 rotate-45 transform border-y border-amber-500 bg-amber-400 py-1 text-center text-[10px] font-black tracking-widest text-gray-900 uppercase shadow-sm">
                     Reservado
+                  </div>
+                )}
+
+                {/* === FRANJA DIAGONAL DE OFERTA (Lila/Morado) === */}
+                {isOffer && !isReserved && (
+                  <div className="absolute top-5 -right-9 z-20 w-40 rotate-45 transform border-y-2 border-purple-800 bg-purple-600 py-1.5 text-center text-[11px] font-black tracking-widest text-white uppercase shadow-md">
+                    ⚡ OFERTA
+                  </div>
+                )}
+
+                {/* === ETIQUETA DE PREVENTA / PEDIDO (Opcional visualmente si querés destacarlo) === */}
+                {isPreventaOrPedido && !isReserved && !isOffer && (
+                  <div className="absolute top-3 left-3 z-20 rounded-lg bg-blue-600 px-2 py-0.5 text-[9px] font-bold tracking-wider text-white uppercase shadow-sm">
+                    📦 {product.status}
                   </div>
                 )}
 
@@ -135,9 +176,38 @@ const Catalogo: React.FC = () => {
             <br className="hidden sm:block" /> en un Solo Lugar
           </h2>
 
-          <p className="mb-20 max-w-2xl text-center text-sm md:text-base leading-relaxed font-medium text-gray-600">
+          <p className="mb-10 max-w-2xl text-center text-sm md:text-base leading-relaxed font-medium text-gray-600">
             Explorá nuestros juegos nuevos y usados, consolas, y accesorios con stock actualizado en tiempo real.
           </p>
+
+          {/* === BARRA DE FILTROS POR PLATAFORMA === */}
+          {!loading && availablePlatforms.length > 0 && (
+            <div className="mb-16 flex flex-wrap items-center justify-center gap-2">
+              <button
+                onClick={() => setSelectedPlatform("Todas")}
+                className={`rounded-xl px-5 py-2.5 text-xs font-bold transition-all ${
+                  selectedPlatform === "Todas"
+                    ? "bg-gray-900 text-white shadow-md scale-105"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
+              >
+                🎮 Todas
+              </button>
+              {availablePlatforms.map((platform) => (
+                <button
+                  key={platform}
+                  onClick={() => setSelectedPlatform(platform)}
+                  className={`rounded-xl px-5 py-2.5 text-xs font-bold transition-all ${
+                    selectedPlatform === platform
+                      ? "bg-red-600 text-white shadow-md shadow-red-600/20 scale-105"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  }`}
+                >
+                  {platform}
+                </button>
+              ))}
+            </div>
+          )}
 
           {/* === ESTADO DE CARGA === */}
           {loading ? (
@@ -145,19 +215,18 @@ const Catalogo: React.FC = () => {
               <div className="mb-4 h-12 w-12 animate-spin rounded-full border-4 border-red-600 border-t-transparent"></div>
               <p className="font-medium text-gray-500">Cargando catálogo en tiempo real...</p>
             </div>
+          ) : filteredProducts.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-16 text-center">
+              <p className="text-base font-semibold text-gray-700 mb-2">No se encontraron productos para esta plataforma.</p>
+              <button 
+                onClick={() => setSelectedPlatform("Todas")}
+                className="text-xs font-bold text-red-600 hover:underline"
+              >
+                Ver todos los productos
+              </button>
+            </div>
           ) : (
             <div className="flex w-full flex-col items-center">
-              {/* === SECCIÓN: JUEGOS USADOS === */}
-              {juegosUsados.length > 0 && (
-                <div className="mb-16 w-full">
-                  <div className="mb-10 text-center">
-                    <h3 className="text-xl font-bold tracking-tight text-gray-900 md:text-2xl">👾 Juegos Usados</h3>
-                    <div className="mx-auto mt-2 h-0.5 w-12 rounded-full bg-red-600/60"></div>
-                  </div>
-                  {renderProductGrid(juegosUsados)}
-                </div>
-              )}
-
               {/* === SECCIÓN: JUEGOS NUEVOS === */}
               {juegosNuevos.length > 0 && (
                 <div className="mb-16 w-full">
@@ -166,6 +235,17 @@ const Catalogo: React.FC = () => {
                     <div className="mx-auto mt-2 h-0.5 w-12 rounded-full bg-red-600/60"></div>
                   </div>
                   {renderProductGrid(juegosNuevos)}
+                </div>
+              )}
+
+              {/* === SECCIÓN: JUEGOS USADOS === */}
+              {juegosUsados.length > 0 && (
+                <div className="mb-16 w-full">
+                  <div className="mb-10 text-center">
+                    <h3 className="text-xl font-bold tracking-tight text-gray-900 md:text-2xl">👾 Juegos Usados</h3>
+                    <div className="mx-auto mt-2 h-0.5 w-12 rounded-full bg-red-600/60"></div>
+                  </div>
+                  {renderProductGrid(juegosUsados)}
                 </div>
               )}
 
