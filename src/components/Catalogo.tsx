@@ -19,13 +19,22 @@ const Catalogo: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // Estados para el ProductModal (vista previa del producto)
+  // Estados para el ProductModal
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isProductModalOpen, setIsProductModalOpen] = useState<boolean>(false);
 
-  // Estados para los filtros avanzados
-  const [selectedPlatform, setSelectedPlatform] = useState<string>("Todas");
-  const [selectedCategory, setSelectedCategory] = useState<string>("todas"); // "todas" | "consola" | "juego-nuevo" | "juego-usado" | "accesorio"
+  // --- ESTADOS DE FILTRADO (DESACOPLADOS) ---
+  
+  // 1. Estado de selección TEMPORAL (lo que el usuario toca en los botones)
+  const [tempPlatform, setTempPlatform] = useState<string>("Todas");
+  const [tempCategory, setTempCategory] = useState<string>("todas");
+
+  // 2. Estado de filtrado APLICADO (lo que se muestra en la grilla actualmente)
+  const [appliedPlatform, setAppliedPlatform] = useState<string>("Todas");
+  const [appliedCategory, setAppliedCategory] = useState<string>("todas");
+
+  // Estado para abrir/cerrar el panel de filtros en dispositivos móviles
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState<boolean>(false);
 
   // URL de API de Google Sheets
   const SHEET_API_URL = import.meta.env.VITE_GOOGLE_SCRIPT_URL;
@@ -52,14 +61,43 @@ const Catalogo: React.FC = () => {
       });
   }, []);
 
-  // FILTRADO GENERAL: stock >= 1 O status Preventa/Pedido, y título válido
+  // Función auxiliar para scrollear suavemente al inicio de la sección del catálogo
+  const scrollToCatalogoTop = () => {
+    const catalogoElement = document.getElementById("catalogo");
+    if (catalogoElement) {
+      catalogoElement.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  // --- LÓGICA DE APLICACIÓN DE FILTROS ---
+
+  // Determinar si hay filtros pendientes de aplicar (para mostrar el botón "Aplicar")
+  const hasUnappliedFilters = tempPlatform !== appliedPlatform || tempCategory !== appliedCategory;
+
+  // Función principal que aplica los filtros seleccionados y actualiza la grilla
+  const handleApplyFilters = () => {
+    setAppliedPlatform(tempPlatform);
+    setAppliedCategory(tempCategory);
+    setIsMobileFilterOpen(false); // Cierra el modal en móvil al aplicar
+    scrollToCatalogoTop(); // Vuelve al inicio para ver resultados
+  };
+
+  // Función para restablecer todos los filtros a "Todos"
+  const handleResetFilters = () => {
+    setTempPlatform("Todas");
+    setTempCategory("todas");
+    setAppliedPlatform("Todas");
+    setAppliedCategory("todas");
+    setIsMobileFilterOpen(false);
+    scrollToCatalogoTop();
+  };
+
+  // FILTRADO GENERAL (Base para obtener plataformas únicas y productos válidos)
   const validProducts = products.filter((product) => {
     const stockNum = Number(product.stock) || 0;
     const status = (product.status || "").trim();
-    
     const isPreventaOrPedido = status === "Preventa" || status === "Pedido";
     const hasStock = stockNum >= 1;
-
     return (hasStock || isPreventaOrPedido) && product.title && product.title.trim() !== "";
   });
 
@@ -72,16 +110,16 @@ const Catalogo: React.FC = () => {
     )
   );
 
-  // APLICAR FILTROS COMBINADOS (Plataforma + Categoría)
+  // --- APLICAR FILTROS (Usando los estados APLICADOS) ---
   const filteredProducts = validProducts.filter((product) => {
     const matchesPlatform = 
-      selectedPlatform === "Todas" || 
-      (product.platform || "").trim().toLowerCase() === selectedPlatform.toLowerCase();
+      appliedPlatform === "Todas" || 
+      (product.platform || "").trim().toLowerCase() === appliedPlatform.toLowerCase();
 
     const productCat = (product.category || "").trim().toLowerCase();
     const matchesCategory = 
-      selectedCategory === "todas" || 
-      productCat === selectedCategory.toLowerCase();
+      appliedCategory === "todas" || 
+      productCat === appliedCategory.toLowerCase();
 
     return matchesPlatform && matchesCategory;
   });
@@ -120,29 +158,21 @@ const Catalogo: React.FC = () => {
                   alt={product.title} 
                   className={`h-full w-full object-cover transition-transform duration-500 ${isReserved ? "" : "group-hover:scale-105"}`} 
                 />
-
-                {/* === FRANJA DIAGONAL DE RESERVADO === */}
                 {isReserved && (
-                  <div className="absolute top-4 -right-10 z-20 w-36 rotate-45 transform border-y border-amber-500 bg-amber-400 py-1 text-center text-[10px] font-black tracking-widest text-gray-900 uppercase shadow-sm">
+                  <div className="absolute top-4 -right-10 z-20 w-36 rotate-45 transform border-y border-amber-500 bg-amber-400 py-1 text-center text-[10px] font-black text-gray-900 uppercase shadow-sm">
                     Reservado
                   </div>
                 )}
-
-                {/* === FRANJA DIAGONAL DE OFERTA === */}
                 {isOffer && !isReserved && (
-                  <div className="absolute top-5 -right-9 z-20 w-40 rotate-45 transform border-y-2 border-purple-800 bg-purple-600 py-1.5 text-center text-[11px] font-black tracking-widest text-white uppercase shadow-md">
+                  <div className="absolute top-5 -right-9 z-20 w-40 rotate-45 transform border-y-2 border-purple-800 bg-purple-600 py-1.5 text-center text-[11px] font-black text-white uppercase shadow-md">
                     ⚡ OFERTA
                   </div>
                 )}
-
-                {/* === ETIQUETA DE PREVENTA / PEDIDO === */}
                 {isPreventaOrPedido && !isReserved && !isOffer && (
-                  <div className="absolute top-3 left-3 z-20 rounded-lg bg-blue-600 px-2 py-0.5 text-[9px] font-bold tracking-wider text-white uppercase shadow-sm">
+                  <div className="absolute top-3 left-3 z-20 rounded-lg bg-blue-600 px-2 py-0.5 text-[9px] font-bold text-white uppercase shadow-sm">
                     📦 {product.status}
                   </div>
                 )}
-
-                {/* Overlay sutil al pasar el mouse */}
                 {!isReserved && (
                   <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/0 transition-colors duration-300 group-hover:bg-black/10">
                     <span className="translate-y-2 transform bg-white px-3 py-1 text-xs font-semibold text-gray-900 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 shadow-sm rounded-full">
@@ -162,7 +192,6 @@ const Catalogo: React.FC = () => {
                     {product.title}
                   </p>
                 </div>
-                
                 <div className="mt-auto pt-2 border-t border-gray-100">
                   <span className={`font-sans text-xs sm:text-sm font-semibold tracking-tight ${isReserved ? "text-gray-400" : "text-gray-900"}`}>
                     $ {Number(product.price.toString().replace(/[^0-9]/g, "")).toLocaleString("en-US")}
@@ -176,9 +205,109 @@ const Catalogo: React.FC = () => {
     );
   };
 
+  // Contenido interno de los filtros (usado en Sidebar Desktop y Drawer Móvil)
+  const renderFilterContent = () => (
+    <div className="flex flex-col gap-6">
+      <div className="flex items-center justify-between border-b border-gray-200 pb-4">
+        <h3 className="font-bold text-gray-900 text-sm flex items-center gap-2">
+          🎛️ Filtrar Productos
+        </h3>
+        {/* Botón "Limpiar" visible si hay filtros aplicados */}
+        {(appliedPlatform !== "Todas" || appliedCategory !== "todas") && (
+          <button 
+            onClick={handleResetFilters}
+            className="text-xs font-semibold text-red-600 hover:underline"
+          >
+            Limpiar
+          </button>
+        )}
+      </div>
+
+      {/* 1. Filtro por Categoría (Usando tempCategory) */}
+      <div>
+        <label className="text-xs font-bold text-gray-700 uppercase tracking-wider block mb-3">
+          Categoría
+        </label>
+        <div className="flex flex-col gap-1.5">
+          {[
+            { id: "todas", label: "✨ Todas las categorías" },
+            { id: "juego-nuevo", label: "🆕 Juegos Nuevos" },
+            { id: "juego-usado", label: "👾 Juegos Usados" },
+            { id: "consola", label: "🎮 Consolas" },
+            { id: "accesorio", label: "🎧 Accesorios" },
+          ].map((cat) => {
+            const isActive = tempCategory === cat.id;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => setTempCategory(cat.id)} // Solo actualiza el estado temporal
+                className={`text-left text-xs font-medium px-3.5 py-2.5 rounded-xl transition-all flex items-center justify-between ${
+                  isActive 
+                    ? "bg-red-600 text-white font-bold shadow-sm" 
+                    : "text-gray-600 hover:bg-gray-200/60 hover:text-gray-900"
+                }`}
+              >
+                <span>{cat.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 2. Filtro por Plataforma (Usando tempPlatform) */}
+      {!loading && availablePlatforms.length > 0 && (
+        <div className="border-t border-gray-200 pt-5">
+          <label className="text-xs font-bold text-gray-700 uppercase tracking-wider block mb-3">
+            Plataforma
+          </label>
+          <div className="flex flex-wrap lg:flex-col gap-1.5">
+            <button
+              onClick={() => setTempPlatform("Todas")} // Solo actualiza el estado temporal
+              className={`text-left text-xs font-medium px-3.5 py-2 rounded-xl transition-all ${
+                tempPlatform === "Todas"
+                  ? "bg-gray-900 text-white font-bold shadow-sm"
+                  : "text-gray-600 hover:bg-gray-200/60 hover:text-gray-900"
+              }`}
+            >
+              🎮 Todas las plataformas
+            </button>
+            {availablePlatforms.map((platform) => {
+              const isActive = tempPlatform === platform;
+              return (
+                <button
+                  key={platform}
+                  onClick={() => setTempPlatform(platform)} // Solo actualiza el estado temporal
+                  className={`text-left text-xs font-medium px-3.5 py-2 rounded-xl transition-all ${
+                    isActive
+                      ? "bg-gray-900 text-white font-bold shadow-sm"
+                      : "text-gray-600 hover:bg-gray-200/60 hover:text-gray-900"
+                  }`}
+                >
+                  {platform}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* --- BOTÓN "APLICAR FILTROS" (Exclusivo para PC/Sticky) --- */}
+      {hasUnappliedFilters && (
+        <div className="border-t border-gray-200 pt-5 mt-auto lg:block hidden">
+          <button
+            onClick={handleApplyFilters}
+            className="w-full bg-red-600 text-white font-bold py-3 rounded-xl text-xs shadow-md hover:bg-red-700 transition-all scale-105"
+          >
+            Aplicar filtros
+          </button>
+        </div>
+      )}
+    </div>
+  );
+
   return (
     <>
-      <section id="catalogo" className="relative w-full overflow-hidden bg-white px-4 py-24 font-sans lg:px-8">
+      <section id="catalogo" className="relative w-full bg-white px-4 py-24 font-sans lg:px-8">
         <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center">
           {/* === ENCABEZADO PRINCIPAL === */}
           <span className="mb-4 inline-block w-fit rounded-full border border-red-100 bg-red-50 px-5 py-2 text-xs font-bold tracking-widest text-red-600 uppercase shadow-sm sm:text-sm">
@@ -186,114 +315,49 @@ const Catalogo: React.FC = () => {
           </span>
 
           <h2 className="mb-4 text-center text-3xl leading-tight font-black tracking-tight text-gray-900 md:text-5xl">
-            Todo para tu Diversión
-            <br className="hidden sm:block" /> en un Solo Lugar
+            <span className="text-brand-cyan font-orbitron font-black"> Enter</span>
+            <span className="text-brand-red font-orbitron font-black">Game</span>
           </h2>
 
           <p className="mb-12 max-w-2xl text-center text-sm md:text-base leading-relaxed font-medium text-gray-600">
             Explorá nuestros juegos nuevos y usados, consolas, y accesorios con stock actualizado en tiempo real.
           </p>
 
-          {/* === LAYOUT DE E-COMMERCE: FILTROS LATERALES / SUPERIORES + GRILLA === */}
+          {/* === LAYOUT DE E-COMMERCE === */}
           <div className="w-full flex flex-col lg:flex-row gap-8 items-start">
             
-            {/* === PANEL DE FILTROS (SIDEBAR ESTILO E-COMMERCE) === */}
-            <aside className="w-full lg:w-72 shrink-0 bg-gray-50/80 border border-gray-200/80 rounded-3xl p-6 shadow-xs flex flex-col gap-6">
-              <div className="flex items-center justify-between border-b border-gray-200 pb-4">
-                <h3 className="font-bold text-gray-900 text-sm flex items-center gap-2">
-                  🎛️ Filtrar Productos
-                </h3>
-                {(selectedPlatform !== "Todas" || selectedCategory !== "todas") && (
-                  <button 
-                    onClick={() => { setSelectedPlatform("Todas"); setSelectedCategory("todas"); }}
-                    className="text-xs font-semibold text-red-600 hover:underline"
-                  >
-                    Limpiar
-                  </button>
-                )}
-              </div>
-
-              {/* 1. Filtro por Categoría */}
-              <div>
-                <label className="text-xs font-bold text-gray-700 uppercase tracking-wider block mb-3">
-                  Categoría
-                </label>
-                <div className="flex flex-col gap-1.5">
-                  {[
-                    { id: "todas", label: "✨ Todas las categorías" },
-                    { id: "juego-nuevo", label: "🆕 Juegos Nuevos" },
-                    { id: "juego-usado", label: "👾 Juegos Usados" },
-                    { id: "consola", label: "🎮 Consolas" },
-                    { id: "accesorio", label: "🎧 Accesorios" },
-                  ].filter((cat, index, self) => index === self.findIndex(c => c.id === cat.id)).map((cat) => {
-                    const isActive = selectedCategory === cat.id;
-                    return (
-                      <button
-                        key={cat.id}
-                        onClick={() => setSelectedCategory(cat.id)}
-                        className={`text-left text-xs font-medium px-3.5 py-2.5 rounded-xl transition-all flex items-center justify-between ${
-                          isActive 
-                            ? "bg-red-600 text-white font-bold shadow-sm" 
-                            : "text-gray-600 hover:bg-gray-200/60 hover:text-gray-900"
-                        }`}
-                      >
-                        <span>{cat.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* 2. Filtro por Plataforma */}
-              {!loading && availablePlatforms.length > 0 && (
-                <div className="border-t border-gray-200 pt-5">
-                  <label className="text-xs font-bold text-gray-700 uppercase tracking-wider block mb-3">
-                    Plataforma
-                  </label>
-                  <div className="flex flex-wrap lg:flex-col gap-1.5">
-                    <button
-                      onClick={() => setSelectedPlatform("Todas")}
-                      className={`text-left text-xs font-medium px-3.5 py-2 rounded-xl transition-all ${
-                        selectedPlatform === "Todas"
-                          ? "bg-gray-900 text-white font-bold shadow-sm"
-                          : "text-gray-600 hover:bg-gray-200/60 hover:text-gray-900"
-                      }`}
-                    >
-                      🎮 Todas las plataformas
-                    </button>
-                    {availablePlatforms.map((platform) => {
-                      const isActive = selectedPlatform === platform;
-                      return (
-                        <button
-                          key={platform}
-                          onClick={() => setSelectedPlatform(platform)}
-                          className={`text-left text-xs font-medium px-3.5 py-2 rounded-xl transition-all ${
-                            isActive
-                              ? "bg-gray-900 text-white font-bold shadow-sm"
-                              : "text-gray-600 hover:bg-gray-200/60 hover:text-gray-900"
-                          }`}
-                        >
-                          {platform}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
+            {/* === SIDEBAR DE FILTROS PARA DESKTOP (STICKY REAL + BOTÓN APLICAR) === */}
+            <aside className="hidden lg:flex w-72 shrink-0 bg-gray-50/90 border border-gray-200/80 rounded-3xl p-6 shadow-xs sticky top-28 flex-col">
+              {renderFilterContent()}
             </aside>
 
             {/* === CONTENIDO PRINCIPAL / GRILLA === */}
             <div className="grow w-full">
-              {/* Barra superior de resultados */}
+              {/* Barra superior de resultados + Botón de filtros para celular */}
               <div className="flex items-center justify-between bg-gray-50/60 border border-gray-100 rounded-2xl px-5 py-3 mb-8">
                 <span className="text-xs font-medium text-gray-500">
                   Mostrando <strong className="text-gray-900">{filteredProducts.length}</strong> artículos
                 </span>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-400 hidden sm:inline">Filtro activo:</span>
-                  <span className="text-xs font-bold bg-white border border-gray-200 px-3 py-1 rounded-full text-red-600 shadow-2xs">
-                    {selectedCategory === "todas" ? "General" : selectedCategory} {selectedPlatform !== "Todas" ? `• ${selectedPlatform}` : ""}
-                  </span>
+                
+                <div className="flex items-center gap-3">
+                  {/* Botón que dispara el modal de filtros en móvil */}
+                  <button
+                    onClick={() => setIsMobileFilterOpen(true)}
+                    className="lg:hidden flex items-center gap-1.5 bg-gray-900 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold shadow-sm"
+                  >
+                    <span>🎛️</span> Filtrar
+                    {/* Indicador visual si hay filtros APLICADOS */}
+                    {(appliedPlatform !== "Todas" || appliedCategory !== "todas") && (
+                      <span className="w-2 h-2 rounded-full bg-red-500"></span>
+                    )}
+                  </button>
+
+                  <div className="hidden sm:flex items-center gap-2">
+                    <span className="text-xs text-gray-400">Filtro aplicado:</span>
+                    <span className="text-xs font-bold bg-white border border-gray-200 px-3 py-1 rounded-full text-red-600 shadow-2xs">
+                      {appliedCategory === "todas" ? "General" : appliedCategory} {appliedPlatform !== "Todas" ? `• ${appliedPlatform}` : ""}
+                    </span>
+                  </div>
                 </div>
               </div>
 
@@ -306,9 +370,9 @@ const Catalogo: React.FC = () => {
               ) : filteredProducts.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-24 text-center bg-gray-50/50 rounded-3xl border border-dashed border-gray-200">
                   <p className="text-base font-semibold text-gray-700 mb-2">No se encontraron productos con estos filtros.</p>
-                  <p className="text-xs text-gray-400 mb-6">Probá seleccionando otra categoría o limpiando los filtros.</p>
+                  <p className="text-xs text-gray-400 mb-6">Probá seleccionando otras categorías o limpiando los filtros.</p>
                   <button 
-                    onClick={() => { setSelectedPlatform("Todas"); setSelectedCategory("todas"); }}
+                    onClick={handleResetFilters}
                     className="bg-gray-900 text-white font-bold text-xs px-6 py-3 rounded-xl shadow-md hover:bg-black transition-all"
                   >
                     Restablecer filtros
@@ -316,11 +380,9 @@ const Catalogo: React.FC = () => {
                 </div>
               ) : (
                 <div className="flex w-full flex-col">
-                  {/* Si el usuario seleccionó una categoría específica, mostramos esa grilla directamente */}
-                  {selectedCategory !== "todas" ? (
+                  {appliedCategory !== "todas" ? (
                     renderProductGrid(filteredProducts)
                   ) : (
-                    /* Si está en "todas", mantenemos las secciones clásicas ordenadas */
                     <>
                       {juegosNuevos.length > 0 && (
                         <div className="mb-14 w-full">
@@ -393,6 +455,47 @@ const Catalogo: React.FC = () => {
           </div>
         </div>
       </section>
+
+      {/* === BOTÓN FLOTANTE FIJO PARA MÓVIL (Acompaña siempre abajo a la derecha) === */}
+      <div className="lg:hidden fixed bottom-6 right-6 z-50">
+        <button
+          onClick={() => setIsMobileFilterOpen(true)}
+          className="flex items-center gap-2 bg-gray-900 text-white px-5 py-3.5 rounded-full text-xs font-bold shadow-xl hover:bg-black transition-transform active:scale-95"
+        >
+          <span className="text-base">🎛️</span> Filtrar productos
+          {(appliedPlatform !== "Todas" || appliedCategory !== "todas") && (
+            <span className="w-2.5 h-2.5 rounded-full bg-red-500 ring-2 ring-white"></span>
+          )}
+        </button>
+      </div>
+
+      {/* === MODAL / DRAWER DE FILTROS PARA MÓVIL (Con botón Aplicar) === */}
+      {isMobileFilterOpen && (
+        <div className="fixed inset-0 z-9999 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-xs p-0 sm:p-4 transition-opacity">
+          <div className="w-full max-w-lg bg-white rounded-t-3xl sm:rounded-3xl p-6 max-h-[85vh] overflow-y-auto shadow-2xl animate-in slide-in-from-bottom duration-300">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-bold text-gray-900 text-base">Filtrar catálogo</h3>
+              <button 
+                onClick={() => setIsMobileFilterOpen(false)}
+                className="text-gray-400 hover:text-gray-700 font-bold p-2 bg-gray-100 rounded-full text-xs"
+              >
+                ✕ Cerrar
+              </button>
+            </div>
+            {renderFilterContent()}
+            {hasUnappliedFilters && (
+              <div className="mt-6 pt-4 border-t border-gray-100">
+                <button
+                  onClick={handleApplyFilters}
+                  className="w-full bg-red-600 text-white font-bold py-3.5 rounded-xl text-xs shadow-md"
+                >
+                  Aplicar filtros y ver resultados
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Modal de Detalle Rápido del Producto */}
       <ProductModal 
