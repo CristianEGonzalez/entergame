@@ -231,8 +231,8 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
           </span>
 
           <h2 className="mb-4 text-center text-3xl leading-tight font-black tracking-tight text-gray-900 md:text-5xl">
-            Todo para tu Diversión
-            <br className="hidden sm:block" /> en un Solo Lugar
+            <span className="text-brand-cyan font-orbitron font-black">Enter</span>
+            <span className="text-brand-red font-orbitron font-black">Game</span>
           </h2>
 
           <p className="mb-12 max-w-2xl text-center text-sm md:text-base leading-relaxed font-medium text-gray-600">
