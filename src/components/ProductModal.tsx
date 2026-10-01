@@ -7,17 +7,19 @@ interface Product {
   src: string;
   price: string;
   status: string;
-  description?: string; // Nuevo atributo opcional para la descripción
+  description?: string;
 }
 
 interface ProductModalProps {
   isOpen: boolean;
   onClose: () => void;
   product: Product | null;
-  onOpenContactWithProduct: (productTitle: string, productPrice: string) => void;
+  // Ya no necesitamos onOpenContactWithProduct aquí si va directo, 
+  // pero podés mantener la prop por compatibilidad o quitarla. La dejamos opcional.
+  onOpenContactWithProduct?: (productTitle: string, productPrice: string) => void;
 }
 
-const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, product, onOpenContactWithProduct }) => {
+const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, product }) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
   useEffect(() => {
@@ -37,6 +39,17 @@ const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, product, o
   if (!isVisible || !product) return null;
 
   const formattedPrice = Number(product.price.toString().replace(/[^0-9]/g, "")).toLocaleString("en-US");
+
+  // === FUNCIÓN PARA REDIRIGIR WHATSAPP ===
+  const handleWhatsAppClick = () => {
+    const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER;
+    
+    const message = `¡Hola! Me interesa este producto y quiero consultar disponibilidad:\n*${product.title}*`;
+    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+    
+    onClose();
+    window.open(whatsappUrl, "_blank");
+  };
 
   return createPortal(
     <div
@@ -97,7 +110,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, product, o
               </span>
             </div>
 
-            {/* Descripción condicional (Solo se renderiza si el producto tiene texto en el Google Sheet) */}
+            {/* Descripción condicional */}
             {product.description && product.description.trim() !== "" && (
               <div className="mb-4 bg-gray-50/80 border border-gray-100 rounded-xl p-3">
                 <p className="font-sans text-xs text-gray-600 leading-relaxed">
@@ -113,18 +126,15 @@ const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, product, o
 
           <div className="w-full flex flex-col gap-2.5">
             <button
-              onClick={() => {
-                onClose();
-                onOpenContactWithProduct(product.title, formattedPrice);
-              }}
-              className="w-full bg-[#25D366] text-white font-sans text-xs md:text-sm font-bold py-3.5 px-6 rounded-xl shadow-md hover:bg-[#1EBE57] transition-all flex justify-center items-center gap-2"
+              onClick={handleWhatsAppClick}
+              className="w-full bg-[#25D366] text-white font-sans text-xs md:text-sm font-bold py-3.5 px-6 rounded-xl shadow-md hover:bg-[#1EBE57] transition-all flex justify-center items-center gap-2 cursor-pointer"
             >
               Consultar por WhatsApp 💬
             </button>
             
             <button
               onClick={onClose}
-              className="w-full bg-gray-100 text-gray-600 hover:bg-gray-200 font-sans font-medium py-2.5 px-6 rounded-xl transition-all text-xs"
+              className="w-full bg-gray-100 text-gray-600 hover:bg-gray-200 font-sans font-medium py-2.5 px-6 rounded-xl transition-all text-xs cursor-pointer"
             >
               Volver al catálogo
             </button>
