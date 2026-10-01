@@ -14,7 +14,12 @@ interface Product {
   description?: string;
 }
 
-const Catalogo: React.FC = () => {
+interface CatalogoProps {
+  searchQuery?: string;
+  onClearSearch?: () => void;
+}
+
+const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) => {
   const [contactOpen, setContactOpen] = useState<boolean>(false);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -94,6 +99,7 @@ const Catalogo: React.FC = () => {
     setAppliedPlatform("Todas");
     setAppliedCategory("todas");
     setIsMobileFilterOpen(false);
+    if (onClearSearch) onClearSearch();
     scrollToCatalogoTop();
   };
 
@@ -115,7 +121,7 @@ const Catalogo: React.FC = () => {
     )
   );
 
-  // --- APLICAR FILTROS ---
+  // --- APLICAR FILTROS (Plataforma + Categoría + Búsqueda por Texto) ---
   const filteredProducts = validProducts.filter((product) => {
     const matchesPlatform = 
       appliedPlatform === "Todas" || 
@@ -126,7 +132,13 @@ const Catalogo: React.FC = () => {
       appliedCategory === "todas" || 
       productCat === appliedCategory.toLowerCase();
 
-    return matchesPlatform && matchesCategory;
+    // Coincidencia con el texto del buscador del Hero
+    const matchesSearch = 
+      !searchQuery || 
+      searchQuery.trim() === "" ||
+      product.title.toLowerCase().includes(searchQuery.toLowerCase());
+
+    return matchesPlatform && matchesCategory && matchesSearch;
   });
 
   const consolas = filteredProducts.filter((p) => (p.category || "").toLowerCase().trim() === "consola");
@@ -213,7 +225,7 @@ const Catalogo: React.FC = () => {
         <h3 className="font-bold text-gray-900 text-sm flex items-center gap-2">
           🔍 Filtrar Productos
         </h3>
-        {(appliedPlatform !== "Todas" || appliedCategory !== "todas") && (
+        {(appliedPlatform !== "Todas" || appliedCategory !== "todas" || (searchQuery && searchQuery.trim() !== "")) && (
           <button 
             onClick={handleResetFilters}
             className="text-xs font-semibold text-red-600 hover:underline"
@@ -319,6 +331,18 @@ const Catalogo: React.FC = () => {
             Explorá nuestros juegos nuevos y usados, consolas, y accesorios con stock actualizado en tiempo real.
           </p>
 
+          {/* Aviso si hay búsqueda activa desde el Hero */}
+          {searchQuery && searchQuery.trim() !== "" && (
+            <div className="mb-8 flex items-center justify-between bg-red-50 border border-red-200 px-6 py-3 rounded-2xl w-full max-w-3xl text-xs text-red-700 font-semibold shadow-2xs">
+              <span>Resultados para la búsqueda: &quot;<strong>{searchQuery}</strong>&quot;</span>
+              {onClearSearch && (
+                <button onClick={onClearSearch} className="hover:underline font-bold ml-4 cursor-pointer">
+                  ✕ Limpiar búsqueda
+                </button>
+              )}
+            </div>
+          )}
+
           <div className="w-full flex flex-col lg:flex-row gap-8 items-start">
             <aside className="hidden lg:flex w-72 shrink-0 bg-gray-50/90 border border-gray-200/80 rounded-3xl p-6 shadow-xs sticky top-28 flex-col">
               {renderFilterContent()}
@@ -336,7 +360,7 @@ const Catalogo: React.FC = () => {
                     className="lg:hidden flex items-center gap-1.5 bg-gray-900 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold shadow-sm"
                   >
                     <span>🔍</span> Filtrar
-                    {(appliedPlatform !== "Todas" || appliedCategory !== "todas") && (
+                    {(appliedPlatform !== "Todas" || appliedCategory !== "todas" || searchQuery) && (
                       <span className="w-2 h-2 rounded-full bg-red-500"></span>
                     )}
                   </button>
@@ -357,18 +381,18 @@ const Catalogo: React.FC = () => {
                 </div>
               ) : filteredProducts.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-24 text-center bg-gray-50/50 rounded-3xl border border-dashed border-gray-200">
-                  <p className="text-base font-semibold text-gray-700 mb-2">No se encontraron productos con estos filtros.</p>
-                  <p className="text-xs text-gray-400 mb-6">Probá seleccionando otras categorías o limpiando los filtros.</p>
+                  <p className="text-base font-semibold text-gray-700 mb-2">No se encontraron productos con estos filtros o búsqueda.</p>
+                  <p className="text-xs text-gray-400 mb-6">Probá seleccionando otras categorías o limpiando la búsqueda.</p>
                   <button 
                     onClick={handleResetFilters}
-                    className="bg-gray-900 text-white font-bold text-xs px-6 py-3 rounded-xl shadow-md hover:bg-black transition-all"
+                    className="bg-gray-900 text-white font-bold text-xs px-6 py-3 rounded-xl shadow-md hover:bg-black transition-all cursor-pointer"
                   >
                     Restablecer filtros
                   </button>
                 </div>
               ) : (
                 <div className="flex w-full flex-col">
-                  {appliedCategory !== "todas" ? (
+                  {appliedCategory !== "todas" || (searchQuery && searchQuery.trim() !== "") ? (
                     renderProductGrid(filteredProducts)
                   ) : (
                     <>
@@ -434,7 +458,7 @@ const Catalogo: React.FC = () => {
               <h3 className="mb-2 text-xl font-bold tracking-tight text-gray-900 md:text-2xl">¿No encontrás lo que buscás?</h3>
               <p className="max-w-xl text-sm md:text-base font-normal text-gray-600">Traemos productos a pedido todas las semanas. Escribinos para consultar por lo que quieras que nosotros nos encargamos.</p>
             </div>
-            <button onClick={() => setContactOpen(true)} className="shrink-0 transform rounded-xl bg-gray-900 px-8 py-3.5 text-sm font-bold text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-black">
+            <button onClick={() => setContactOpen(true)} className="shrink-0 transform rounded-xl bg-gray-900 px-8 py-3.5 text-sm font-bold text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-black cursor-pointer">
               Consultar Stock
             </button>
           </div>
@@ -444,10 +468,10 @@ const Catalogo: React.FC = () => {
       <div className="lg:hidden fixed bottom-6 right-6 z-50">
         <button
           onClick={() => setIsMobileFilterOpen(true)}
-          className="flex items-center gap-2 bg-gray-900 text-white px-5 py-3.5 rounded-full text-xs font-bold shadow-xl hover:bg-black transition-transform active:scale-95"
+          className="flex items-center gap-2 bg-gray-900 text-white px-5 py-3.5 rounded-full text-xs font-bold shadow-xl hover:bg-black transition-transform active:scale-95 cursor-pointer"
         >
           <span className="text-base">🔍</span> Filtrar productos
-          {(appliedPlatform !== "Todas" || appliedCategory !== "todas") && (
+          {(appliedPlatform !== "Todas" || appliedCategory !== "todas" || searchQuery) && (
             <span className="w-2.5 h-2.5 rounded-full bg-red-500 ring-2 ring-white"></span>
           )}
         </button>
@@ -460,7 +484,7 @@ const Catalogo: React.FC = () => {
               <h3 className="font-bold text-gray-900 text-base">Filtrar catálogo</h3>
               <button 
                 onClick={() => setIsMobileFilterOpen(false)}
-                className="text-gray-400 hover:text-gray-700 font-bold p-2 bg-gray-100 rounded-full text-xs"
+                className="text-gray-400 hover:text-gray-700 font-bold p-2 bg-gray-100 rounded-full text-xs cursor-pointer"
               >
                 ✕ Cerrar
               </button>
@@ -470,7 +494,7 @@ const Catalogo: React.FC = () => {
               <div className="mt-6 pt-4 border-t border-gray-100">
                 <button
                   onClick={handleApplyFilters}
-                  className="w-full bg-red-600 text-white font-bold py-3.5 rounded-xl text-xs shadow-md"
+                  className="w-full bg-red-600 text-white font-bold py-3.5 rounded-xl text-xs shadow-md cursor-pointer"
                 >
                   Aplicar filtros y ver resultados
                 </button>
