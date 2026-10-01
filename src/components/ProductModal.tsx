@@ -14,9 +14,6 @@ interface ProductModalProps {
   isOpen: boolean;
   onClose: () => void;
   product: Product | null;
-  // Ya no necesitamos onOpenContactWithProduct aquí si va directo, 
-  // pero podés mantener la prop por compatibilidad o quitarla. La dejamos opcional.
-  onOpenContactWithProduct?: (productTitle: string, productPrice: string) => void;
 }
 
 const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, product }) => {
