@@ -211,7 +211,7 @@ const Catalogo: React.FC = () => {
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between border-b border-gray-200 pb-4">
         <h3 className="font-bold text-gray-900 text-sm flex items-center gap-2">
-          🎛️ Filtrar Productos
+          🔍 Filtrar Productos
         </h3>
         {(appliedPlatform !== "Todas" || appliedCategory !== "todas") && (
           <button 
@@ -335,7 +335,7 @@ const Catalogo: React.FC = () => {
                     onClick={() => setIsMobileFilterOpen(true)}
                     className="lg:hidden flex items-center gap-1.5 bg-gray-900 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold shadow-sm"
                   >
-                    <span>🎛️</span> Filtrar
+                    <span>🔍</span> Filtrar
                     {(appliedPlatform !== "Todas" || appliedCategory !== "todas") && (
                       <span className="w-2 h-2 rounded-full bg-red-500"></span>
                     )}
@@ -446,7 +446,7 @@ const Catalogo: React.FC = () => {
           onClick={() => setIsMobileFilterOpen(true)}
           className="flex items-center gap-2 bg-gray-900 text-white px-5 py-3.5 rounded-full text-xs font-bold shadow-xl hover:bg-black transition-transform active:scale-95"
         >
-          <span className="text-base">🎛️</span> Filtrar productos
+          <span className="text-base">🔍</span> Filtrar productos
           {(appliedPlatform !== "Todas" || appliedCategory !== "todas") && (
             <span className="w-2.5 h-2.5 rounded-full bg-red-500 ring-2 ring-white"></span>
           )}
