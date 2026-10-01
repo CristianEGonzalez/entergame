@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
 import ContactModal from "./ContactModal";
 import ProductModal from "./ProductModal";
+import CatalogFilters from "./CatalogFilters"; // <--- Importamos el componente modular
 
 interface Product {
   id: number;
   title: string;
   src: string;
   price: string;
-  status: string; // "Reservado", "Preventa", "Pedido", "Oferta" o vacío
-  stock: number; // Se renderizan con stock >= 1 o si son preventa/pedido
-  category?: string; // "consola" | "juego-nuevo" | "juego-usado" | "accesorio"
-  platform?: string; // "Nintendo Switch", "PlayStation 5", etc.
+  status: string;
+  stock: number;
+  category?: string;
+  platform?: string;
   description?: string;
 }
 
@@ -24,21 +25,16 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // Estados para el ProductModal
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isProductModalOpen, setIsProductModalOpen] = useState<boolean>(false);
 
-  // --- ESTADOS DE FILTRADO (DESACOPLADOS) ---
   const [tempPlatform, setTempPlatform] = useState<string>("Todas");
   const [tempCategory, setTempCategory] = useState<string>("todas");
-
   const [appliedPlatform, setAppliedPlatform] = useState<string>("Todas");
   const [appliedCategory, setAppliedCategory] = useState<string>("todas");
 
-  // Estado para abrir/cerrar el panel de filtros en dispositivos móviles
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState<boolean>(false);
 
-  // Efecto para bloquear el scroll del body cuando el modal móvil de filtros está abierto
   useEffect(() => {
     if (isMobileFilterOpen) {
       document.body.style.overflow = "hidden";
@@ -50,7 +46,6 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
     };
   }, [isMobileFilterOpen]);
 
-  // URL de API de Google Sheets
   const SHEET_API_URL = import.meta.env.VITE_GOOGLE_SCRIPT_URL;
 
   useEffect(() => {
@@ -75,7 +70,6 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
       });
   }, []);
 
-  // Función auxiliar para scrollear suavemente al inicio de la sección del catálogo
   const scrollToCatalogoTop = () => {
     const catalogoElement = document.getElementById("catalogo");
     if (catalogoElement) {
@@ -83,7 +77,6 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
     }
   };
 
-  // --- LÓGICA DE APLICACIÓN DE FILTROS ---
   const hasUnappliedFilters = tempPlatform !== appliedPlatform || tempCategory !== appliedCategory;
 
   const handleApplyFilters = () => {
@@ -103,7 +96,6 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
     scrollToCatalogoTop();
   };
 
-  // FILTRADO GENERAL
   const validProducts = products.filter((product) => {
     const stockNum = Number(product.stock) || 0;
     const status = (product.status || "").trim();
@@ -112,7 +104,6 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
     return (hasStock || isPreventaOrPedido) && product.title && product.title.trim() !== "";
   });
 
-  // OBTENER PLATAFORMAS ÚNICAS DINÁMICAMENTE
   const availablePlatforms = Array.from(
     new Set(
       validProducts
@@ -121,7 +112,6 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
     )
   );
 
-  // --- APLICAR FILTROS (Plataforma + Categoría + Búsqueda por Texto) ---
   const filteredProducts = validProducts.filter((product) => {
     const matchesPlatform = 
       appliedPlatform === "Todas" || 
@@ -132,7 +122,6 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
       appliedCategory === "todas" || 
       productCat === appliedCategory.toLowerCase();
 
-    // Coincidencia con el texto del buscador del Hero
     const matchesSearch = 
       !searchQuery || 
       searchQuery.trim() === "" ||
@@ -219,100 +208,19 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
     );
   };
 
-  const renderFilterContent = () => (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between border-b border-gray-200 pb-4">
-        <h3 className="font-bold text-gray-900 text-sm flex items-center gap-2">
-          🔍 Filtrar Productos
-        </h3>
-        {(appliedPlatform !== "Todas" || appliedCategory !== "todas" || (searchQuery && searchQuery.trim() !== "")) && (
-          <button 
-            onClick={handleResetFilters}
-            className="text-xs font-semibold text-red-600 hover:underline"
-          >
-            Limpiar
-          </button>
-        )}
-      </div>
-
-      <div>
-        <label className="text-xs font-bold text-gray-700 uppercase tracking-wider block mb-3">
-          Categoría
-        </label>
-        <div className="flex flex-col gap-1.5">
-          {[
-            { id: "todas", label: "✨ Todas las categorías" },
-            { id: "juego-nuevo", label: "🆕 Juegos Nuevos" },
-            { id: "juego-usado", label: "👾 Juegos Usados" },
-            { id: "consola", label: "🎮 Consolas" },
-            { id: "accesorio", label: "🎧 Accesorios" },
-          ].map((cat) => {
-            const isActive = tempCategory === cat.id;
-            return (
-              <button
-                key={cat.id}
-                onClick={() => setTempCategory(cat.id)}
-                className={`text-left text-xs font-medium px-3.5 py-2.5 rounded-xl transition-all flex items-center justify-between ${
-                  isActive 
-                    ? "bg-red-600 text-white font-bold shadow-sm" 
-                    : "text-gray-600 hover:bg-gray-200/60 hover:text-gray-900"
-                }`}
-              >
-                <span>{cat.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {!loading && availablePlatforms.length > 0 && (
-        <div className="border-t border-gray-200 pt-5">
-          <label className="text-xs font-bold text-gray-700 uppercase tracking-wider block mb-3">
-            Plataforma
-          </label>
-          <div className="flex flex-wrap lg:flex-col gap-1.5">
-            <button
-              onClick={() => setTempPlatform("Todas")}
-              className={`text-left text-xs font-medium px-3.5 py-2 rounded-xl transition-all ${
-                tempPlatform === "Todas"
-                  ? "bg-gray-900 text-white font-bold shadow-sm"
-                  : "text-gray-600 hover:bg-gray-200/60 hover:text-gray-900"
-              }`}
-            >
-              🎮 Todas las plataformas
-            </button>
-            {availablePlatforms.map((platform) => {
-              const isActive = tempPlatform === platform;
-              return (
-                <button
-                  key={platform}
-                  onClick={() => setTempPlatform(platform)}
-                  className={`text-left text-xs font-medium px-3.5 py-2 rounded-xl transition-all ${
-                    isActive
-                      ? "bg-gray-900 text-white font-bold shadow-sm"
-                      : "text-gray-600 hover:bg-gray-200/60 hover:text-gray-900"
-                  }`}
-                >
-                  {platform}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {hasUnappliedFilters && (
-        <div className="border-t border-gray-200 pt-5 mt-auto lg:block hidden">
-          <button
-            onClick={handleApplyFilters}
-            className="w-full bg-red-600 text-white font-bold py-3 rounded-xl text-xs shadow-md hover:bg-red-700 transition-all scale-105"
-          >
-            Aplicar filtros
-          </button>
-        </div>
-      )}
-    </div>
-  );
+  const sharedFilterProps = {
+    tempCategory,
+    setTempCategory,
+    tempPlatform,
+    setTempPlatform,
+    availablePlatforms,
+    hasUnappliedFilters,
+    appliedPlatform,
+    appliedCategory,
+    searchQuery,
+    handleResetFilters,
+    handleApplyFilters,
+  };
 
   return (
     <>
@@ -331,7 +239,6 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
             Explorá nuestros juegos nuevos y usados, consolas, y accesorios con stock actualizado en tiempo real.
           </p>
 
-          {/* Aviso si hay búsqueda activa desde el Hero */}
           {searchQuery && searchQuery.trim() !== "" && (
             <div className="mb-8 flex items-center justify-between bg-red-50 border border-red-200 px-6 py-3 rounded-2xl w-full max-w-3xl text-xs text-red-700 font-semibold shadow-2xs">
               <span>Resultados para la búsqueda: &quot;<strong>{searchQuery}</strong>&quot;</span>
@@ -344,8 +251,9 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
           )}
 
           <div className="w-full flex flex-col lg:flex-row gap-8 items-start">
+            {/* Sidebar de Filtros para Desktop */}
             <aside className="hidden lg:flex w-72 shrink-0 bg-gray-50/90 border border-gray-200/80 rounded-3xl p-6 shadow-xs sticky top-28 flex-col">
-              {renderFilterContent()}
+              <CatalogFilters {...sharedFilterProps} isMobile={false} />
             </aside>
 
             <div className="grow w-full">
@@ -357,7 +265,7 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => setIsMobileFilterOpen(true)}
-                    className="lg:hidden flex items-center gap-1.5 bg-gray-900 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold shadow-sm"
+                    className="lg:hidden flex items-center gap-1.5 bg-gray-900 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold shadow-sm cursor-pointer"
                   >
                     <span>🔍</span> Filtrar
                     {(appliedPlatform !== "Todas" || appliedCategory !== "todas" || searchQuery) && (
@@ -465,6 +373,7 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
         </div>
       </section>
 
+      {/* Botón flotante móvil */}
       <div className="lg:hidden fixed bottom-6 right-6 z-50">
         <button
           onClick={() => setIsMobileFilterOpen(true)}
@@ -477,6 +386,7 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
         </button>
       </div>
 
+      {/* Modal / Drawer de Filtros para Móvil */}
       {isMobileFilterOpen && (
         <div className="fixed inset-0 z-9999 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-xs p-0 sm:p-4 transition-opacity">
           <div className="w-full max-w-lg bg-white rounded-t-3xl sm:rounded-3xl p-6 max-h-[85vh] overflow-y-auto shadow-2xl animate-in slide-in-from-bottom duration-300">
@@ -489,17 +399,9 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
                 ✕ Cerrar
               </button>
             </div>
-            {renderFilterContent()}
-            {hasUnappliedFilters && (
-              <div className="mt-6 pt-4 border-t border-gray-100">
-                <button
-                  onClick={handleApplyFilters}
-                  className="w-full bg-red-600 text-white font-bold py-3.5 rounded-xl text-xs shadow-md cursor-pointer"
-                >
-                  Aplicar filtros y ver resultados
-                </button>
-              </div>
-            )}
+            
+            {/* Reutilizamos el componente modular pasando isMobile={true} */}
+            <CatalogFilters {...sharedFilterProps} isMobile={true} />
           </div>
         </div>
       )}
