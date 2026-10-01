@@ -14,6 +14,7 @@ interface ProductModalProps {
   isOpen: boolean;
   onClose: () => void;
   product: Product | null;
+
 }
 
 const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, product }) => {

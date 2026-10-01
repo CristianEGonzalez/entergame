@@ -484,9 +484,6 @@ const Catalogo: React.FC = () => {
         isOpen={isProductModalOpen}
         onClose={() => setIsProductModalOpen(false)}
         product={selectedProduct}
-        onOpenContactWithProduct={(_, __) => {
-          setContactOpen(true);
-        }}
       />
 
       <ContactModal isOpen={contactOpen} onClose={() => setContactOpen(false)} />
