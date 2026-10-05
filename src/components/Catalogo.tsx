@@ -99,7 +99,7 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
   const validProducts = products.filter((product) => {
     const stockNum = Number(product.stock) || 0;
     const status = (product.status || "").trim();
-    const isPreventaOrPedido = status === "Preventa" || status === "Pedido";
+    const isPreventaOrPedido = status === "Preventa" || status === "Pedido" || status === "Oferta";
     const hasStock = stockNum >= 1;
     return (hasStock || isPreventaOrPedido) && product.title && product.title.trim() !== "";
   });
@@ -335,7 +335,7 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
                               <h3 className="text-lg font-bold tracking-tight text-gray-900 flex items-center gap-2">
                                 <span>🎮</span> Consolas
                               </h3>
-                              <p className="text-[11px] text-gray-400">Precio expresado en dólares</p>
+                              {/* <p className="text-[11px] text-gray-400">Precio expresado en dólares</p> */} {/*POR AHORA EN PESOS */}
                             </div>
                             <span className="text-xs font-semibold text-gray-400">{consolas.length} disponibles</span>
                           </div>
