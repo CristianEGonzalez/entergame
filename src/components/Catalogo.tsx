@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ContactModal from "./ContactModal";
 import ProductModal from "./ProductModal";
-import CatalogFilters from "./CatalogFilters"; // <--- Importamos el componente modular
+import CatalogFilters from "./CatalogFilters";
 
 interface Product {
   id: number;
@@ -34,6 +34,30 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
   const [appliedCategory, setAppliedCategory] = useState<string>("todas");
 
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState<boolean>(false);
+  const [isCatalogInView, setIsCatalogInView] = useState<boolean>(false);
+
+// Control de scroll para asegurarnos de que el botón flotante de filtro de móvil aparezca siempre que el catálogo esté en pantalla
+  useEffect(() => {
+    const handleScroll = () => {
+      const catalogoElement = document.getElementById("catalogo");
+      if (!catalogoElement) return;
+
+      const rect = catalogoElement.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+
+      const isVisible = rect.top < windowHeight && rect.bottom > 0;
+      
+      setIsCatalogInView(isVisible);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    // Ejecutamos una vez al cargar por si ya estamos en la sección
+    handleScroll();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     if (isMobileFilterOpen) {
@@ -235,10 +259,6 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
             <span className="text-brand-red font-orbitron font-black">Game</span>
           </h2>
 
-          <p className="mb-12 max-w-2xl text-center text-sm md:text-base leading-relaxed font-medium text-gray-600">
-            Explorá nuestros juegos nuevos y usados, consolas, y accesorios con stock actualizado en tiempo real.
-          </p>
-
           {searchQuery && searchQuery.trim() !== "" && (
             <div className="mb-8 flex items-center justify-between bg-red-50 border border-red-200 px-6 py-3 rounded-2xl w-full max-w-3xl text-xs text-red-700 font-semibold shadow-2xs">
               <span>Resultados para la búsqueda: &quot;<strong>{searchQuery}</strong>&quot;</span>
@@ -335,7 +355,6 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
                               <h3 className="text-lg font-bold tracking-tight text-gray-900 flex items-center gap-2">
                                 <span>🎮</span> Consolas
                               </h3>
-                              {/* <p className="text-[11px] text-gray-400">Precio expresado en dólares</p> */} {/*POR AHORA EN PESOS */}
                             </div>
                             <span className="text-xs font-semibold text-gray-400">{consolas.length} disponibles</span>
                           </div>
@@ -373,18 +392,20 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
         </div>
       </section>
 
-      {/* Botón flotante móvil */}
-      <div className="lg:hidden fixed bottom-6 right-6 z-50">
-        <button
-          onClick={() => setIsMobileFilterOpen(true)}
-          className="flex items-center gap-2 bg-gray-900 text-white px-5 py-3.5 rounded-full text-xs font-bold shadow-xl hover:bg-black transition-transform active:scale-95 cursor-pointer"
-        >
-          <span className="text-base">🔍</span> Filtrar productos
-          {(appliedPlatform !== "Todas" || appliedCategory !== "todas" || searchQuery) && (
-            <span className="w-2.5 h-2.5 rounded-full bg-red-500 ring-2 ring-white"></span>
-          )}
-        </button>
-      </div>
+      {/* Botón flotante móvil (Solo aparece si el catálogo está visible en pantalla) */}
+      {isCatalogInView && !isMobileFilterOpen && (
+        <div className="lg:hidden fixed bottom-6 right-6 z-50 animate-in fade-in duration-300">
+          <button
+            onClick={() => setIsMobileFilterOpen(true)}
+            className="flex items-center gap-2 bg-gray-900 text-white px-5 py-3.5 rounded-full text-xs font-bold shadow-xl hover:bg-black transition-transform active:scale-95 cursor-pointer"
+          >
+            <span className="text-base">🔍</span> Filtrar productos
+            {(appliedPlatform !== "Todas" || appliedCategory !== "todas" || searchQuery) && (
+              <span className="w-2.5 h-2.5 rounded-full bg-red-500 ring-2 ring-white"></span>
+            )}
+          </button>
+        </div>
+      )}
 
       {/* Modal / Drawer de Filtros para Móvil */}
       {isMobileFilterOpen && (
@@ -400,7 +421,6 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
               </button>
             </div>
             
-            {/* Reutilizamos el componente modular pasando isMobile={true} */}
             <CatalogFilters {...sharedFilterProps} isMobile={true} />
           </div>
         </div>
