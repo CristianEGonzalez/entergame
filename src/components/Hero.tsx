@@ -41,7 +41,7 @@ const Hero: React.FC<HeroProps> = ({ onSearchSubmit }) => {
 
             {/* Badge */}
             <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-xs font-bold tracking-widest text-gray-700 uppercase shadow-sm sm:text-sm">
-              <span className="bg-brand-red h-2 w-2 animate-pulse rounded-full" />
+              <span className="bg-brand-purple h-2 w-2 animate-pulse rounded-full" />
               Tienda gamer
             </div>
 
@@ -50,7 +50,7 @@ const Hero: React.FC<HeroProps> = ({ onSearchSubmit }) => {
               Entrá al Juego
               <br />
               con <span className="text-brand-cyan font-orbitron font-black">Enter</span>
-              <span className="text-brand-red font-orbitron font-black">Game</span>
+              <span className="text-brand-magenta font-orbitron font-black">Game</span>
             </h1>
 
             {/* Descripción */}
@@ -67,11 +67,11 @@ const Hero: React.FC<HeroProps> = ({ onSearchSubmit }) => {
 
             {/* CTAs */}
             <div className="mb-10 flex flex-col gap-3 sm:flex-row w-full sm:w-auto">
-              <a href="#catalogo" className="bg-brand-red font-orbitron rounded-xl px-7 py-4 text-center font-bold text-white shadow-lg shadow-red-500/20 transition-all duration-300 hover:-translate-y-1 hover:bg-red-700">
+              <a href="#catalogo" className="bg-brand-magenta font-orbitron rounded-xl px-7 py-4 text-center font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:bg-brand-magenta/80">
                 Ver catálogo
               </a>
 
-              <a href={WHATSAPP_CHANNEL_URL} target="_blank" rel="noopener noreferrer" className="bg-brand-cyan font-orbitron rounded-xl px-7 py-4 text-center font-bold text-white shadow-lg shadow-cyan-500/20 transition-all duration-300 hover:-translate-y-1">
+              <a href={WHATSAPP_CHANNEL_URL} target="_blank" rel="noopener noreferrer" className="bg-brand-cyan font-orbitron rounded-xl px-7 py-4 text-center font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:bg-brand-cyan/80">
                 Novedades y Ofertas
               </a>
 
@@ -81,7 +81,7 @@ const Hero: React.FC<HeroProps> = ({ onSearchSubmit }) => {
             {/* Características */}
             <div className="flex flex-wrap gap-x-8 gap-y-4">
               <div className="flex items-center gap-2">
-                <span className="bg-brand-red/10 text-brand-red flex h-7 w-7 items-center justify-center rounded-full text-sm">✓</span>
+                <span className="bg-brand-magenta/10 text-brand-magenta flex h-7 w-7 items-center justify-center rounded-full text-sm">✓</span>
                 <span className="text-sm font-bold text-gray-700">Especialistas en Nintendo</span>
               </div>
 

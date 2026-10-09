@@ -97,7 +97,7 @@ const Comprar: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-5">
             <a
               href="#catalogo"
-              className="bg-red-600 text-white font-bold text-lg py-4 px-10 rounded-2xl text-center shadow-[0_8px_20px_rgba(220,38,38,0.3)] hover:bg-red-700 hover:shadow-[0_12px_25px_rgba(220,38,38,0.4)] transition-all transform hover:-translate-y-1"
+              className="bg-brand-purple text-white font-bold text-lg py-4 px-10 rounded-2xl text-center hover:bg-brand-purple/80 transition-all transform hover:-translate-y-1"
             >
               Ver Catálogo de Productos
             </a>

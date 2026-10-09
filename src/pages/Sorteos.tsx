@@ -332,9 +332,9 @@ const Sorteos: React.FC = () => {
               <div className="pointer-events-none absolute inset-0 z-10 bg-linear-to-b from-[#0f172a] via-transparent to-[#0f172a] opacity-95"></div>
 
               {/* Puntero Joy-Con Central */}
-              <div className="pointer-events-none absolute top-1/2 right-0 left-0 z-5 -mt-7.5 flex h-15 items-center justify-between border-y-2 border-white/35 bg-linear-to-r from-brand-cyan/15 to-brand-red/15 px-2.5">
+              <div className="pointer-events-none absolute top-1/2 right-0 left-0 z-5 -mt-7.5 flex h-15 items-center justify-between border-y-2 border-white/35 bg-linear-to-r from-brand-cyan/15 to-brand-magenta/15 px-2.5">
                 <div className="h-0 w-0 border-y-10 border-l-12 border-y-transparent border-l-brand-cyan drop-shadow-[0_0_6px_#0AB9E6]"></div>
-                <div className="h-0 w-0 border-y-10 border-r-12 border-y-transparent border-r-brand-red drop-shadow-[0_0_6px_#FF3028]"></div>
+                <div className="h-0 w-0 border-y-10 border-r-12 border-y-transparent border-r-brand-magenta drop-shadow-[0_0_6px_#FF3028]"></div>
               </div>
 
               {/* Carrete */}
@@ -356,7 +356,7 @@ const Sorteos: React.FC = () => {
               onClick={startSpin}
               disabled={isSpinning || participantes.length === 0}
               className={`w-full rounded-2xl px-6 py-4 text-xl font-black tracking-wider uppercase shadow-md transition-all duration-300 ${
-                participantes.length > 0 && !isSpinning ? "cursor-pointer bg-linear-to-r from-brand-cyan via-sky-500 to-brand-red text-white hover:scale-[1.01] hover:shadow-cyan-400/20 active:scale-95" : "cursor-not-allowed bg-slate-200 text-slate-400"
+                participantes.length > 0 && !isSpinning ? "cursor-pointer bg-linear-to-r from-brand-cyan via-sky-500 to-brand-magenta text-white hover:scale-[1.01] hover:shadow-cyan-400/20 active:scale-95" : "cursor-not-allowed bg-slate-200 text-slate-400"
               }`}>
               {isSpinning ? "🌀 ¡Girando Ruleta...!" : "🎮 ¡ELEGIR GANADOR!"}
             </button>
@@ -368,9 +368,9 @@ const Sorteos: React.FC = () => {
                   <span className="animate-bounce text-2xl">⭐</span>
                   <h3 className="text-xs font-black tracking-widest text-amber-500 uppercase">¡GANADOR DEL SORTEO ENTERGAME!</h3>
                 </div>
-                <div className="bg-linear-to-r from-brand-cyan to-brand-red bg-clip-text py-2 text-3xl font-extrabold wrap-break-word text-transparent sm:text-4xl">{lastWinner}</div>
+                <div className="bg-linear-to-r from-brand-cyan to-brand-magenta bg-clip-text py-2 text-3xl font-extrabold wrap-break-word text-transparent sm:text-4xl">{lastWinner}</div>
                 <div className="mt-4 flex justify-center gap-3">
-                  <button onClick={handleExcludeWinner} className="flex items-center space-x-1 rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-xs font-semibold text-brand-red shadow-sm transition-all hover:bg-red-100">
+                  <button onClick={handleExcludeWinner} className="flex items-center space-x-1 rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-xs font-semibold text-brand-magenta shadow-sm transition-all hover:bg-red-100">
                     <span>🗑️ Descartar para la siguiente ronda</span>
                   </button>
                 </div>
@@ -420,7 +420,7 @@ const Sorteos: React.FC = () => {
               <button onClick={() => setActiveTab("paste")} className={`flex-1 rounded-lg py-2 transition-all ${activeTab === "paste" ? "bg-white text-brand-cyan shadow-sm" : "text-slate-500 hover:text-slate-800"}`}>
                 Pegar Lista
               </button>
-              <button onClick={() => setActiveTab("file")} className={`flex-1 rounded-lg py-2 transition-all ${activeTab === "file" ? "bg-white text-brand-red shadow-sm" : "text-slate-500 hover:text-slate-800"}`}>
+              <button onClick={() => setActiveTab("file")} className={`flex-1 rounded-lg py-2 transition-all ${activeTab === "file" ? "bg-white text-brand-magenta shadow-sm" : "text-slate-500 hover:text-slate-800"}`}>
                 Subir CSV
               </button>
             </div>
@@ -440,9 +440,9 @@ const Sorteos: React.FC = () => {
               </div>
             ) : (
               <div className="space-y-4">
-                <label className="group block w-full cursor-pointer rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-6 text-center transition-colors hover:border-brand-red hover:bg-slate-100/80">
+                <label className="group block w-full cursor-pointer rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-6 text-center transition-colors hover:border-brand-magenta hover:bg-slate-100/80">
                   <span className="mb-1 block text-2xl">📂</span>
-                  <span className="mb-1 block text-sm font-semibold text-slate-700 group-hover:text-brand-red">Seleccionar archivo .CSV</span>
+                  <span className="mb-1 block text-sm font-semibold text-slate-700 group-hover:text-brand-magenta">Seleccionar archivo .CSV</span>
                   <span className="text-xs text-slate-400">{fileName}</span>
                   <input type="file" accept=".csv,text/plain" onChange={handleFileUpload} className="hidden" />
                 </label>

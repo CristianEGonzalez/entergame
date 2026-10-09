@@ -13,7 +13,7 @@ const Footer: React.FC = () => {
   ];
 
   return (
-    <footer className="border-brand-red border-t-4 bg-gray-950 px-4 pt-16 pb-8 font-sans text-white lg:px-8">
+    <footer className="border-brand-magenta border-t-4 bg-gray-950 px-4 pt-16 pb-8 font-sans text-white lg:px-8">
       <div className="mx-auto max-w-7xl">
         {/* === CONTENIDO PRINCIPAL === */}
         <div className="mb-12 grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-8">
@@ -21,10 +21,11 @@ const Footer: React.FC = () => {
           <div className="flex flex-col items-center text-center md:items-start md:text-left">
             <h2 className="font-orbitron! mb-4 flex items-center gap-1 text-3xl font-black tracking-tighter">
               <span className="text-brand-cyan">Enter</span>
-              <span className="text-brand-red">Game</span>
+              <span className="text-brand-magenta">Game</span>
             </h2>
             <p className="max-w-sm leading-relaxed font-medium text-gray-400">
-              Tu próxima aventura empieza acá. Nos especializamos en la compra, venta y canje de juegos físicos para Nintendo Switch.
+              Entrá al juego con EnterGame.<br className="hidden sm:block" />
+              Tu próxima aventura empieza acá.
             </p>
           </div>
 
@@ -34,7 +35,7 @@ const Footer: React.FC = () => {
             <ul className="flex flex-col items-center gap-3 md:items-start">
               {footerLinks.map((link) => (
                 <li key={link.name}>
-                  <a href={link.href} className="font-medium text-gray-400 transition-colors hover:text-red-500">
+                  <a href={link.href} className="font-medium text-gray-400 transition-colors hover:text-brand-purple">
                     {link.name}
                   </a>
                 </li>

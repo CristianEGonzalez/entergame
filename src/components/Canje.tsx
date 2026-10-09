@@ -84,7 +84,7 @@ const Canje: React.FC = () => {
             </p>
           </div>
           
-          <ContactButton nombre="Solicitar Cotización" className="relative z-10 whitespace-nowrap bg-red-600 text-white font-bold text-lg py-4 px-10 rounded-2xl hover:bg-red-500 shadow-lg hover:shadow-red-600/50 transition-all transform hover:-translate-y-1" />
+          <ContactButton nombre="Solicitar Cotización" className="relative z-10 whitespace-nowrap bg-brand-purple text-white font-bold text-lg py-4 px-10 rounded-2xl hover:bg-brand-purple/80 shadow-lg hover:shadow-brand-purple/60 transition-all transform hover:-translate-y-1" />
           
         </div>
 

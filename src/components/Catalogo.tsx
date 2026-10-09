@@ -256,7 +256,7 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
 
           <h2 className="mb-4 text-center text-3xl leading-tight font-black tracking-tight text-gray-900 md:text-5xl">
             <span className="text-brand-cyan font-orbitron font-black">Enter</span>
-            <span className="text-brand-red font-orbitron font-black">Game</span>
+            <span className="text-brand-magenta font-orbitron font-black">Game</span>
           </h2>
 
           {searchQuery && searchQuery.trim() !== "" && (

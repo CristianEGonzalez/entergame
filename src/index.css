@@ -31,7 +31,8 @@
 /* Colores y texto */
 @theme {
   --color-brand-black: #0a0a0f;
-  --color-brand-cyan: #0AB9E6;
+  --color-brand-cyan: #2EBCFC;
+  --color-brand-magenta: #F906F2;
   --color-brand-red: #FF3028;
   --color-brand-gray: #F9FAFB;
   --color-brand-purple: #8a2be2;
