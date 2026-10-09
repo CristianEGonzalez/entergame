@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import Button from "./Button";
 import ContactModal from "./ContactModal";
-import EnterGameLogo from "./EnterGameLogo";
 
 const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
@@ -48,7 +47,6 @@ const Header: React.FC = () => {
         {/* Logo Area */}
         <div className="relative z-50 flex items-center tracking-tighter">
           <Link to="/" onClick={(e) => handleNavClick(e, "inicio")}>
-            {/* <EnterGameLogo className="w-64 lg:w-72 hover:scale-105 transition-transform duration-300" /> */}
             <h4 className="font-orbitron text-brand-cyan text-4xl font-black transition-all duration-300 hover:scale-[1.02] hover:opacity-80">
               Enter<span className="text-brand-magenta">Game</span>
             </h4>
