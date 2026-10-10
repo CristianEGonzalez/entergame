@@ -118,7 +118,7 @@ const CatalogFilters: React.FC<CatalogFiltersProps> = ({
         </div>
       )}
 
-      {/* Botón Aplicar (En Desktop va abajo del aside; en Móvil lo maneja el modal o se muestra aquí) */}
+      {/* Botón Aplicar */}
       {hasUnappliedFilters && isMobile && (
         <div className="border-t border-gray-100 pt-4 mt-2">
           <button

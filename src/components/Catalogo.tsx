@@ -36,7 +36,6 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState<boolean>(false);
   const [isCatalogInView, setIsCatalogInView] = useState<boolean>(false);
 
-// Control de scroll para asegurarnos de que el botón flotante de filtro de móvil aparezca siempre que el catálogo esté en pantalla
   useEffect(() => {
     const handleScroll = () => {
       const catalogoElement = document.getElementById("catalogo");
@@ -46,12 +45,10 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
       const windowHeight = window.innerHeight;
 
       const isVisible = rect.top < windowHeight && rect.bottom > 0;
-      
       setIsCatalogInView(isVisible);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    // Ejecutamos una vez al cargar por si ya estamos en la sección
     handleScroll();
 
     return () => {
@@ -82,13 +79,12 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
         if (Array.isArray(data)) {
           setProducts(data);
         } else {
-          console.error("La API no devolvió una lista válida:", data);
           setProducts([]);
         }
         setLoading(false);
       })
       .catch((err) => {
-        console.error("Error al cargar el catálogo desde Google Sheets:", err);
+        console.error("Error al cargar el catálogo:", err);
         setProducts([]);
         setLoading(false);
       });
@@ -248,7 +244,7 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
 
   return (
     <>
-      <section id="catalogo" className="relative w-full bg-linear-to-r from-[#d7f5ff] via-[#ead8fd] to-[#d7f5ff] px-4 py-24 font-sans lg:px-8 overflow-hidden">
+      <section id="catalogo" className="relative w-full bg-linear-to-r from-[#d7f5ff] via-[#ead8fd] to-[#d7f5ff] px-4 py-24 font-sans lg:px-8">
         <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center">
           <span className="mb-4 inline-block w-fit rounded-full border border-red-100 bg-red-50 px-5 py-2 text-xs font-bold tracking-widest text-red-600 uppercase shadow-sm sm:text-sm">
             🔥 Catálogo Oficial
@@ -271,8 +267,8 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
           )}
 
           <div className="w-full flex flex-col lg:flex-row gap-8 items-start">
-            {/* Sidebar de Filtros para Desktop */}
-            <aside className="hidden lg:flex w-72 shrink-0 bg-gray-50/90 border border-gray-200/80 rounded-3xl p-6 shadow-xs sticky top-28 flex-col">
+            {/* Sidebar de Filtros Sticky para Desktop */}
+            <aside className="hidden lg:flex w-72 shrink-0 bg-gray-50/95 border border-gray-200/80 rounded-3xl p-6 shadow-xs sticky top-24 flex-col max-h-[calc(100vh-7rem)] overflow-y-auto">
               <CatalogFilters {...sharedFilterProps} isMobile={false} />
             </aside>
 
@@ -392,7 +388,6 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
         </div>
       </section>
 
-      {/* Botón flotante móvil (Solo aparece si el catálogo está visible en pantalla) */}
       {isCatalogInView && !isMobileFilterOpen && (
         <div className="lg:hidden fixed bottom-6 right-6 z-50 animate-in fade-in duration-300">
           <button
@@ -407,7 +402,6 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
         </div>
       )}
 
-      {/* Modal / Drawer de Filtros para Móvil */}
       {isMobileFilterOpen && (
         <div className="fixed inset-0 z-9999 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-xs p-0 sm:p-4 transition-opacity">
           <div className="w-full max-w-lg bg-white rounded-t-3xl sm:rounded-3xl p-6 max-h-[85vh] overflow-y-auto shadow-2xl animate-in slide-in-from-bottom duration-300">
