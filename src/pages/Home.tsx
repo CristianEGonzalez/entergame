@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Hero from "../components/Hero";
 import Canje from "../components/Canje";
 import Comprar from "../components/Comprar";
@@ -6,19 +6,20 @@ import Vender from "../components/Vender";
 import Catalogo from "../components/Catalogo";
 import Faq from "../components/Faq";
 
-const Home: React.FC = () => {
-  // Estado para la búsqueda global conectada entre el Hero y el Catálogo
-  const [searchQuery, setSearchQuery] = useState<string>("");
+interface HomeProps {
+  searchQuery: string;
+  onClearSearch: () => void;
+}
 
+const Home: React.FC<HomeProps> = ({ searchQuery, onClearSearch }) => {
   return (
     <main>
-      {/* Pasamos la función que actualiza el estado al buscar */}
-      <Hero onSearchSubmit={(query) => setSearchQuery(query)} />
+      <Hero />
 
       {/* Pasamos el searchQuery y la función para limpiarlo al catálogo */}
       <Catalogo 
         searchQuery={searchQuery} 
-        onClearSearch={() => setSearchQuery("")} 
+        onClearSearch={onClearSearch} 
       />
 
       <Comprar />

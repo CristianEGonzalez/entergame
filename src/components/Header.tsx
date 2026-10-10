@@ -2,26 +2,31 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import Button from "./Button";
 import ContactModal from "./ContactModal";
+import SearchBar from "./SearchBar";
 import enterGameIcon from '../assets/EnterGameIcon.png';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  onSearchSubmit?: (query: string) => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onSearchSubmit }) => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [contactOpen, setContactOpen] = useState<boolean>(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState<boolean>(false);
 
   const location = useLocation();
   const navigate = useNavigate();
 
   const hamburgerLine: string = `h-1 w-6 my-1 rounded-full bg-gray-100 transition ease transform duration-300`;
-
   const links: string[] = ["Catalogo", "Comprar", "Vender", "Canje", "FAQ"];
 
   useEffect(() => {
-    if (menuOpen) {
+    if (menuOpen || mobileSearchOpen) {
       document.body.style.overflow = "hidden";
     } else if (!contactOpen) {
       document.body.style.overflow = "unset";
     }
-  }, [menuOpen, contactOpen]);
+  }, [menuOpen, contactOpen, mobileSearchOpen]);
 
   const handleMobileContact = (): void => {
     setMenuOpen(false);
@@ -31,6 +36,7 @@ const Header: React.FC = () => {
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string): void => {
     e.preventDefault();
     setMenuOpen(false);
+    setMobileSearchOpen(false);
 
     if (location.pathname === "/") {
       document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -42,27 +48,50 @@ const Header: React.FC = () => {
     }
   };
 
+  const handleSearch = (searchTerm: string) => {
+    if (onSearchSubmit) {
+      onSearchSubmit(searchTerm);
+    }
+    setMenuOpen(false);
+    setMobileSearchOpen(false);
+    
+    if (location.pathname === "/") {
+      document.getElementById("catalogo")?.scrollIntoView({ behavior: "smooth" });
+    } else {
+      navigate("/");
+      setTimeout(() => {
+        document.getElementById("catalogo")?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+    }
+  };
+
   return (
     <>
-      <header className="sticky top-0 z-50 flex w-full items-center justify-between border-b border-gray-200 bg-black/80 px-4 py-3 pb-3 font-sans shadow-xs backdrop-blur-md">
-        {/* Logo Area */}
-        <div className="relative z-50 flex items-center gap-3 tracking-tighter">
-          <Link to="/" onClick={(e) => handleNavClick(e, "inicio")} className="flex items-center gap-2.5">
-            {/* Espacio para el ícono */}
-            <img 
-              src={enterGameIcon} 
-              alt="EnterGame Icon" 
-              className="w-10 h-10 object-contain" 
-            />
-            {/* Titulo */}
-            <h4 className="font-orbitron text-brand-cyan text-4xl font-black transition-all duration-300 hover:scale-[1.02] hover:opacity-80">
-              Enter<span className="text-brand-magenta">Game</span>
-            </h4>
-          </Link>
+      <header className="sticky top-0 z-50 flex w-full items-center justify-between border-b border-gray-800 bg-black/80 px-4 py-3 font-sans shadow-xs backdrop-blur-md">
+        
+        {/* Logo Area + SearchBar en Desktop */}
+        <div className="flex items-center gap-4 md:gap-8 grow md:grow-0">
+          <div className="relative z-50 flex items-center gap-3 tracking-tighter shrink-0">
+            <Link to="/" onClick={(e) => handleNavClick(e, "inicio")} className="flex items-center gap-2.5">
+              <img 
+                src={enterGameIcon} 
+                alt="EnterGame Icon" 
+                className="w-10 h-10 object-contain" 
+              />
+              <h4 className="font-orbitron text-brand-cyan text-2xl sm:text-3xl md:text-4xl font-black transition-all duration-300 hover:scale-[1.02] hover:opacity-80">
+                Enter<span className="text-brand-magenta">Game</span>
+              </h4>
+            </Link>
+          </div>
+
+          {/* SearchBar más ancha para Desktop */}
+          <div className="hidden md:block w-72 lg:w-96 xl:w-md">
+            <SearchBar onSearch={handleSearch} />
+          </div>
         </div>
 
         {/* Navigation Links (Desktop) */}
-        <nav className="hidden items-center md:flex">
+        <nav className="hidden items-center lg:flex">
           {links.map((item) => (
             <Link key={item} to={`/#${item.toLowerCase()}`} onClick={(e) => handleNavClick(e, item.toLowerCase())} className="hover:text-brand-magenta mr-6 text-sm font-bold tracking-wider text-gray-300 uppercase transition-colors duration-300">
               {item}
@@ -97,30 +126,64 @@ const Header: React.FC = () => {
           <Button nombre="Contactar" onClick={() => setContactOpen(true)} className="bg-brand-purple rounded-full px-6 py-2 font-bold text-white shadow-md transition-colors hover:bg-purple-700" />
         </nav>
 
-        {/* Mobile Menu Icon */}
-        <button className="group relative z-50 flex h-12 w-12 flex-col items-center justify-center md:hidden" aria-label="Abrir menú de navegación" onClick={() => setMenuOpen(!menuOpen)}>
-          <div className={`${hamburgerLine} ${menuOpen ? "translate-y-3 rotate-45 bg-red-600!" : ""}`} />
-          <div className={`${hamburgerLine} ${menuOpen ? "opacity-0" : ""}`} />
-          <div className={`${hamburgerLine} ${menuOpen ? "-translate-y-3 -rotate-45 bg-red-600!" : ""}`} />
-        </button>
+        {/* Acciones Móvil: Botón de Lupa + Menú Hamburguesa */}
+        <div className="flex items-center gap-2 md:hidden">
+          
+          {/* Botón Lupa en Móvil */}
+          <button 
+            onClick={() => {
+              setMobileSearchOpen(!mobileSearchOpen);
+              setMenuOpen(false);
+            }}
+            className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-900 border border-gray-800 text-gray-300 hover:text-white transition-colors"
+            aria-label="Buscar en el catálogo"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </button>
+
+          {/* Menú Hamburguesa */}
+          <button 
+            className="group relative z-50 flex h-10 w-10 flex-col items-center justify-center" 
+            aria-label="Abrir menú de navegación" 
+            onClick={() => {
+              setMenuOpen(!menuOpen);
+              setMobileSearchOpen(false);
+            }}
+          >
+            <div className={`${hamburgerLine} ${menuOpen ? "translate-y-3 rotate-45 bg-red-600!" : ""}`} />
+            <div className={`${hamburgerLine} ${menuOpen ? "opacity-0" : ""}`} />
+            <div className={`${hamburgerLine} ${menuOpen ? "-translate-y-3 -rotate-45 bg-red-600!" : ""}`} />
+          </button>
+
+        </div>
       </header>
 
+      {/* --- DESPLIEGUE RÁPIDO DE BÚSQUEDA MÓVIL --- */}
+      {mobileSearchOpen && (
+        <div className="fixed top-15.25 left-0 right-0 z-40 bg-black/95 border-b border-gray-800 p-4 backdrop-blur-xl md:hidden animate-in slide-in-from-top duration-200">
+          <SearchBar onSearch={handleSearch} />
+        </div>
+      )}
+
       {/* --- MENÚ MÓVIL --- */}
-      <div className={`fixed inset-0 z-40 flex h-full w-full flex-col items-center justify-start gap-8 bg-white/95 pt-28 backdrop-blur-xl transition-all duration-300 ease-in-out md:hidden ${menuOpen ? "visible scale-100 opacity-100" : "pointer-events-none invisible scale-95 opacity-0"} `}>
+      <div className={`fixed inset-0 z-40 flex h-full w-full flex-col items-center justify-start gap-6 bg-black/95 pt-24 px-6 backdrop-blur-xl transition-all duration-300 ease-in-out md:hidden ${menuOpen ? "visible scale-100 opacity-100" : "pointer-events-none invisible scale-95 opacity-0"} `}>
+        
         {links.map((item) => (
-          <Link key={item} to={`/#${item.toLowerCase()}`} onClick={(e) => handleNavClick(e, item.toLowerCase())} className="font-orbitron relative pb-1 text-2xl font-bold tracking-widest text-gray-800 uppercase transition-all duration-300 hover:text-red-600">
+          <Link key={item} to={`/#${item.toLowerCase()}`} onClick={(e) => handleNavClick(e, item.toLowerCase())} className="font-orbitron relative pb-1 text-2xl font-bold tracking-widest text-white uppercase transition-all duration-300 hover:text-brand-cyan">
             {item}
           </Link>
         ))}
 
         {/* Enlace a App Sorteos (Mobile) */}
-        <Link to="/sorteos" onClick={() => setMenuOpen(false)} className="font-orbitron relative flex items-center gap-2 pb-1 text-2xl font-bold tracking-widest text-cyan-600 uppercase transition-all duration-300 hover:text-cyan-500">
+        <Link to="/sorteos" onClick={() => setMenuOpen(false)} className="font-orbitron relative flex items-center gap-2 pb-1 text-2xl font-bold tracking-widest text-cyan-400 uppercase transition-all duration-300 hover:text-cyan-300">
           <span>🎰</span>
           <span>App Sorteos</span>
         </Link>
 
         {/* Enlace a Instagram (Mobile) */}
-        <a href="https://instagram.com/entergame_ok" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2.5 rounded-xl border border-gray-200 bg-gray-100 px-4 py-2 text-lg font-bold text-gray-800">
+        <a href="https://instagram.com/entergame_ok" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2.5 rounded-xl border border-gray-800 bg-gray-900 px-4 py-2 text-lg font-bold text-white">
           <svg className="h-6 w-6" viewBox="0 0 24 24">
             <defs>
               <radialGradient id="instagram-gradient-mobile" cx="30%" cy="107%" r="150%">
@@ -139,7 +202,7 @@ const Header: React.FC = () => {
           Seguinos en Instagram
         </a>
 
-        <Button nombre="Contactar" onClick={handleMobileContact} className="font-orbitron rounded-full bg-red-600 px-10 py-3 text-xl font-bold text-white shadow-lg transition-colors hover:bg-red-700" />
+        <Button nombre="Contactar" onClick={handleMobileContact} className="font-orbitron rounded-full bg-brand-purple px-10 py-3 text-xl font-bold text-white shadow-lg transition-colors hover:bg-purple-700" />
       </div>
 
       <ContactModal isOpen={contactOpen} onClose={() => setContactOpen(false)} />

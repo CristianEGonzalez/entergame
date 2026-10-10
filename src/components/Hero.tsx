@@ -1,52 +1,34 @@
 import React from "react";
 import ContactButton from "./ContactButton";
 import InstagramCarousel from "./InstagramCarousel";
-import SearchBar from "./SearchBar";
 
-interface HeroProps {
-  onSearchSubmit: (query: string) => void;
-}
-
-const Hero: React.FC<HeroProps> = ({ onSearchSubmit }) => {
+const Hero: React.FC = () => {
   const WHATSAPP_CHANNEL_URL = import.meta.env.VITE_WHATSAPP_CHANNEL_URL;
-
-  const handleSearch = (searchTerm: string) => {
-    onSearchSubmit(searchTerm);
-    const catalogoElement = document.getElementById("catalogo");
-    if (catalogoElement) {
-      catalogoElement.scrollIntoView({ behavior: "smooth" });
-    }
-  };
 
   return (
     <section id="inicio" className="relative flex min-h-[90vh] w-full items-center overflow-hidden bg-[#0b0c16] font-sans">
 
       {/* ======= FONDO SYNTHWAVE LIVIANO ======= */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden bg-[#201229]">
-        {/* Luces estáticas de fondo (sin blur pesados en animación) */}
+        {/* Luces estáticas de fondo */}
         <div className="bg-brand-purple/40 absolute top-1/4 left-1/4 h-100 w-100 rounded-full blur-[100px]" />
-        {/* Patrón sutil estático o con animación CSS */}
+        {/* Patrón sutil estático */}
         <div
           className="absolute inset-0 opacity-20"
           style={{
             backgroundImage: `
-        linear-gradient(to right, rgba(46, 188, 252, 0.4) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(249, 6, 242, 0.4) 1px, transparent 1px)
-      `,
+              linear-gradient(to right, rgba(46, 188, 252, 0.4) 1px, transparent 1px),
+              linear-gradient(to bottom, rgba(249, 6, 242, 0.4) 1px, transparent 1px)
+            `,
             backgroundSize: "40px 40px",
           }}
         />
       </div>
-      
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-6 py-16 lg:px-8 lg:py-24">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
           {/* ======= COLUMNA IZQUIERDA ======= */}
           <div className="flex max-w-2xl flex-col items-start">
-            {/* BARRA DE BÚSQUEDA */}
-            <div className="mb-6 w-full">
-              <SearchBar onSearch={handleSearch} />
-            </div>
 
             {/* Badge */}
             <div className="border-brand-cyan/30 text-brand-cyan mb-7 inline-flex items-center gap-2 rounded-full border bg-black/40 px-4 py-2 text-xs font-bold tracking-widest uppercase shadow-sm backdrop-blur-md sm:text-sm">
@@ -110,7 +92,6 @@ const Hero: React.FC<HeroProps> = ({ onSearchSubmit }) => {
         </div>
       </div>
     </section>
-    
   );
 };
 
