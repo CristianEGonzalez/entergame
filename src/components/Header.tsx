@@ -55,14 +55,16 @@ const Header: React.FC<HeaderProps> = ({ onSearchSubmit }) => {
     setMenuOpen(false);
     setMobileSearchOpen(false);
     
-    if (location.pathname === "/") {
-      document.getElementById("catalogo")?.scrollIntoView({ behavior: "smooth" });
-    } else {
-      navigate("/");
-      setTimeout(() => {
+    setTimeout(() => {
+      if (location.pathname === "/") {
         document.getElementById("catalogo")?.scrollIntoView({ behavior: "smooth" });
-      }, 100);
-    }
+      } else {
+        navigate("/");
+        setTimeout(() => {
+          document.getElementById("catalogo")?.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+      }
+    }, 150);
   };
 
   return (
