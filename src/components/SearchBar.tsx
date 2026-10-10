@@ -31,7 +31,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       />
       <button
         type="submit"
-        className="shrink-0 rounded-xl bg-red-600 px-5 py-2.5 text-xs md:text-sm font-bold text-white shadow-md transition-all hover:bg-red-700 active:scale-95 cursor-pointer"
+        className="shrink-0 rounded-xl bg-brand-purple px-5 py-2.5 text-xs md:text-sm font-bold text-white shadow-md transition-all hover:bg-brand-purple/80 active:scale-95 cursor-pointer"
       >
         Buscar
       </button>

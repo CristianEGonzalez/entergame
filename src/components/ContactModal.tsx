@@ -101,17 +101,18 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
           isOpen ? "scale-100 translate-y-0" : "scale-95 translate-y-4"
         }`}
       >
-        {/* Barra superior estilo Nintendo */}
+        {/* Barra decorativa superior */}
         <div className="absolute top-0 left-0 w-full h-2 flex">
-          <div className="w-1/2 h-full bg-cyan-500"></div>
-          <div className="w-1/2 h-full bg-red-600"></div>
+          <div className="w-1/2 h-full bg-brand-magenta"></div>
+          <div className="w-1/2 h-full bg-brand-cyan"></div>
         </div>
 
         {/* Cabecera */}
         <div className="flex justify-between items-center p-6 border-b border-gray-100 mt-2">
           <h2 className="text-2xl font-black text-gray-900 tracking-tight">
             {!isSubmitted ? (
-              <>Contactar a <span className="text-red-600">EnterGame</span></>
+              <>Contactar a <span className="text-brand-cyan font-orbitron font-black">Enter</span>
+              <span className="text-brand-magenta font-orbitron font-black">Game</span></>
             ) : (
               <span className="text-[#25D366]">¡Ya casi estamos!</span>
             )}
@@ -144,7 +145,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
                       required
                       value={formData.nombre}
                       onChange={handleChange}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3.5 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-all placeholder:text-gray-400"
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3.5 text-gray-900 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none transition-all placeholder:text-gray-400"
                       placeholder="Ej: Mario"
                     />
                   </div>
@@ -157,7 +158,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
                       required
                       value={formData.telefono}
                       onChange={handleChange}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3.5 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-all placeholder:text-gray-400"
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3.5 text-gray-900 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none transition-all placeholder:text-gray-400"
                       placeholder="Tu número"
                     />
                   </div>
@@ -170,14 +171,14 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
                       name="motivo"
                       value={formData.motivo}
                       onChange={handleChange}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3.5 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none appearance-none cursor-pointer font-medium"
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3.5 text-gray-900 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none appearance-none cursor-pointer font-medium"
                     >
                       <option>Comprar un producto</option>
                       <option>Vender mis juegos</option>
                       <option>Cotizar un canje</option>
                       <option>Otra consulta</option>
                     </select>
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-red-600 text-xs">▼</div>
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-brand-purple text-xs">▼</div>
                   </div>
                 </div>
 
@@ -189,7 +190,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
                     required
                     value={formData.mensaje}
                     onChange={handleChange}
-                    className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3.5 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-all placeholder:text-gray-400 resize-none"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3.5 text-gray-900 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none transition-all placeholder:text-gray-400 resize-none"
                     placeholder="Hola, quería saber si tienen el Zelda..."
                   />
                 </div>
@@ -201,7 +202,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
                       type="checkbox"
                       checked={subscribe}
                       onChange={(e) => setSubscribe(e.target.checked)}
-                      className="w-4 h-4 text-red-600 bg-white border-gray-300 rounded-sm focus:ring-red-500 focus:ring-2 cursor-pointer"
+                      className="w-4 h-4 text-brand-purple bg-white border-gray-300 rounded-sm focus:ring-red-500 focus:ring-2 cursor-pointer"
                     />
                   </div>
                   <label htmlFor="subscribe" className="text-sm text-gray-600 cursor-pointer select-none">

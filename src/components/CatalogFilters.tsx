@@ -70,7 +70,7 @@ const CatalogFilters: React.FC<CatalogFiltersProps> = ({
                 onClick={() => setTempCategory(cat.id)}
                 className={`text-left text-xs font-medium px-3.5 py-2.5 rounded-xl transition-all flex items-center justify-between cursor-pointer ${
                   isActive 
-                    ? "bg-red-600 text-white font-bold shadow-sm" 
+                    ? "bg-blue-500 text-white font-bold shadow-sm" 
                     : "text-gray-600 hover:bg-gray-200/60 hover:text-gray-900"
                 }`}
               >
@@ -92,7 +92,7 @@ const CatalogFilters: React.FC<CatalogFiltersProps> = ({
               onClick={() => setTempPlatform("Todas")}
               className={`text-left text-xs font-medium px-3.5 py-2 rounded-xl transition-all cursor-pointer ${
                 tempPlatform === "Todas"
-                  ? "bg-gray-900 text-white font-bold shadow-sm"
+                  ? "bg-pink-500 text-white font-bold shadow-sm"
                   : "text-gray-600 hover:bg-gray-200/60 hover:text-gray-900"
               }`}
             >
@@ -106,7 +106,7 @@ const CatalogFilters: React.FC<CatalogFiltersProps> = ({
                   onClick={() => setTempPlatform(platform)}
                   className={`text-left text-xs font-medium px-3.5 py-2 rounded-xl transition-all cursor-pointer ${
                     isActive
-                      ? "bg-gray-900 text-white font-bold shadow-sm"
+                      ? "bg-pink-500 text-white font-bold shadow-sm"
                       : "text-gray-600 hover:bg-gray-200/60 hover:text-gray-900"
                   }`}
                 >
@@ -123,7 +123,7 @@ const CatalogFilters: React.FC<CatalogFiltersProps> = ({
         <div className="border-t border-gray-100 pt-4 mt-2">
           <button
             onClick={handleApplyFilters}
-            className="w-full bg-red-600 text-white font-bold py-3.5 rounded-xl text-xs shadow-md cursor-pointer"
+            className="w-full bg-brand-purple text-white font-bold py-3.5 rounded-xl text-xs shadow-md cursor-pointer"
           >
             Aplicar filtros y ver resultados
           </button>
@@ -134,7 +134,7 @@ const CatalogFilters: React.FC<CatalogFiltersProps> = ({
         <div className="border-t border-gray-200 pt-5 mt-auto">
           <button
             onClick={handleApplyFilters}
-            className="w-full bg-red-600 text-white font-bold py-3 rounded-xl text-xs shadow-md hover:bg-red-700 transition-all scale-105 cursor-pointer"
+            className="w-full bg-brand-purple text-white font-bold py-3 rounded-xl text-xs shadow-md hover:bg-brand-purple/80 transition-all scale-105 cursor-pointer"
           >
             Aplicar filtros
           </button>

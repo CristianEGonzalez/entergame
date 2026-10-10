@@ -80,7 +80,7 @@ const Vender: React.FC = () => {
           <div className="flex justify-center w-full">
             <button
               onClick={() => setContactOpen(true)}
-              className="group relative inline-flex items-center justify-center px-10 py-4 font-bold text-white bg-red-600 rounded-2xl overflow-hidden transition-all hover:scale-105 shadow-[0_0_20px_rgba(220,38,38,0.4)] cursor-pointer"
+              className="group relative inline-flex items-center justify-center px-10 py-4 font-bold text-white bg-brand-purple rounded-2xl overflow-hidden transition-all hover:scale-105 shadow-[0_0_20px_rgba(220,38,38,0.4)] cursor-pointer"
             >
               <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-2xl group-hover:w-64 group-hover:h-56 opacity-10"></span>
               <span className="relative flex items-center gap-2">

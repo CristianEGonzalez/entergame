@@ -248,7 +248,7 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
 
   return (
     <>
-      <section id="catalogo" className="relative w-full bg-white px-4 py-24 font-sans lg:px-8">
+      <section id="catalogo" className="relative w-full bg-linear-to-r from-[#d7f5ff] via-[#ead8fd] to-[#d7f5ff] px-4 py-24 font-sans lg:px-8 overflow-hidden">
         <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center">
           <span className="mb-4 inline-block w-fit rounded-full border border-red-100 bg-red-50 px-5 py-2 text-xs font-bold tracking-widest text-red-600 uppercase shadow-sm sm:text-sm">
             🔥 Catálogo Oficial
@@ -256,7 +256,7 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
 
           <h2 className="mb-4 text-center text-3xl leading-tight font-black tracking-tight text-gray-900 md:text-5xl">
             <span className="text-brand-cyan font-orbitron font-black">Enter</span>
-            <span className="text-brand-red font-orbitron font-black">Game</span>
+            <span className="text-brand-magenta font-orbitron font-black">Game</span>
           </h2>
 
           {searchQuery && searchQuery.trim() !== "" && (
