@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import Button from "./Button";
 import ContactModal from "./ContactModal";
+import enterGameIcon from '../assets/EnterGameIcon.png';
 
 const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
@@ -45,8 +46,15 @@ const Header: React.FC = () => {
     <>
       <header className="sticky top-0 z-50 flex w-full items-center justify-between border-b border-gray-200 bg-black/80 px-4 py-3 pb-3 font-sans shadow-xs backdrop-blur-md">
         {/* Logo Area */}
-        <div className="relative z-50 flex items-center tracking-tighter">
-          <Link to="/" onClick={(e) => handleNavClick(e, "inicio")}>
+        <div className="relative z-50 flex items-center gap-3 tracking-tighter">
+          <Link to="/" onClick={(e) => handleNavClick(e, "inicio")} className="flex items-center gap-2.5">
+            {/* Espacio para el ícono */}
+            <img 
+              src={enterGameIcon} 
+              alt="EnterGame Icon" 
+              className="w-10 h-10 object-contain" 
+            />
+            {/* Titulo */}
             <h4 className="font-orbitron text-brand-cyan text-4xl font-black transition-all duration-300 hover:scale-[1.02] hover:opacity-80">
               Enter<span className="text-brand-magenta">Game</span>
             </h4>

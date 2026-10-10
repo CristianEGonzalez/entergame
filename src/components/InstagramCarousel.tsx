@@ -121,7 +121,7 @@ export const InstagramCarousel: React.FC = () => {
           >
             ← Anterior
           </button>
-          <span className="text-xs font-bold text-gray-600">
+          <span className="text-xs font-bold text-white">
             {currentIndex + 1} / {posts.length}
           </span>
           <button 

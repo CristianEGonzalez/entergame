@@ -248,7 +248,7 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
 
   return (
     <>
-      <section id="catalogo" className="relative w-full bg-white px-4 py-24 font-sans lg:px-8">
+      <section id="catalogo" className="relative w-full bg-gradient-to-r from-[#d7f5ff] via-[#ead8fd] via-[#f4d2fd] via-[#ead8fd] to-[#d7f5ff] px-4 py-24 font-sans lg:px-8 overflow-hidden">
         <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center">
           <span className="mb-4 inline-block w-fit rounded-full border border-red-100 bg-red-50 px-5 py-2 text-xs font-bold tracking-widest text-red-600 uppercase shadow-sm sm:text-sm">
             🔥 Catálogo Oficial
