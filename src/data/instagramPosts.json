@@ -2,21 +2,21 @@
   {
     "id": "1",
     "permalink": "https://www.instagram.com/p/DeJy2xpqZLC/",
-    "imageUrl": "../../public/SorteoOcarina.png",
+    "imageUrl": "/SorteoOcarina.png",
     "caption": "Sorteo activo! The Legend of Zelda: Ocarina of Time. No te pierdas esta oportunidad única.",
     "mediaType": "sorteo"
   },
   {
     "id": "2",
     "permalink": "https://www.instagram.com/p/DdwoKWiqvss/",
-    "imageUrl": "../../public/OcarinaOfTimeCover.jpg",
+    "imageUrl": "/OcarinaOfTimeCover.jpg",
     "caption": "¡Preventa abierta! The Legend of Zelda: Ocarina of Time. ¡CARÁTULA METALIZADA! Asegurá tu copia hoy.",
     "mediaType": "preventa"
   },
   {
     "id": "3",
     "permalink": "https://www.instagram.com/p/Ddu5cMUleUr/",
-    "imageUrl": "../../public/SorteoMarioOdyssey.png",
+    "imageUrl": "/SorteoMarioOdyssey.png",
     "caption": "¡Gran Sorteo Especial de Halloween! Gánate Super Mario Odyssey para Nintendo Switch.",
     "mediaType": "sorteo"
   }
