@@ -68,7 +68,7 @@ const CatalogFilters: React.FC<CatalogFiltersProps> = ({
               <button
                 key={cat.id}
                 onClick={() => setTempCategory(cat.id)}
-                className={`text-left text-xs font-medium px-3.5 py-2.5 rounded-xl transition-all flex items-center justify-between cursor-pointer ${
+                className={`text-left text-xs font-medium px-3.5 py-2.5 rounded-lg transition-all flex items-center justify-between cursor-pointer ${
                   isActive 
                     ? "bg-blue-500 text-white font-bold shadow-sm" 
                     : "text-gray-600 hover:bg-gray-200/60 hover:text-gray-900"
@@ -90,7 +90,7 @@ const CatalogFilters: React.FC<CatalogFiltersProps> = ({
           <div className="flex flex-wrap lg:flex-col gap-1.5">
             <button
               onClick={() => setTempPlatform("Todas")}
-              className={`text-left text-xs font-medium px-3.5 py-2 rounded-xl transition-all cursor-pointer ${
+              className={`text-left text-xs font-medium px-3.5 py-2 rounded-lg transition-all cursor-pointer ${
                 tempPlatform === "Todas"
                   ? "bg-pink-500 text-white font-bold shadow-sm"
                   : "text-gray-600 hover:bg-gray-200/60 hover:text-gray-900"

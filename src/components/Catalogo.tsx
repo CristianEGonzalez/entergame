@@ -150,10 +150,29 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
     return matchesPlatform && matchesCategory && matchesSearch;
   });
 
-  const consolas = filteredProducts.filter((p) => (p.category || "").toLowerCase().trim() === "consola");
-  const juegosNuevos = filteredProducts.filter((p) => (p.category || "").toLowerCase().trim() === "juego-nuevo");
-  const juegosUsados = filteredProducts.filter((p) => (p.category || "").toLowerCase().trim() === "juego-usado");
-  const accesorios = filteredProducts.filter((p) => (p.category || "").toLowerCase().trim() === "accesorio");
+  // Agrupación de categorías para renderizar con .map()
+  const sectionCategories = [
+    {
+      title: "Juegos Nuevos (Sellados)",
+      icon: "🆕",
+      items: filteredProducts.filter((p) => (p.category || "").toLowerCase().trim() === "juego-nuevo"),
+    },
+    {
+      title: "Juegos Usados",
+      icon: "👾",
+      items: filteredProducts.filter((p) => (p.category || "").toLowerCase().trim() === "juego-usado"),
+    },
+    {
+      title: "Consolas",
+      icon: "🎮",
+      items: filteredProducts.filter((p) => (p.category || "").toLowerCase().trim() === "consola"),
+    },
+    {
+      title: "Accesorios",
+      icon: "🎧",
+      items: filteredProducts.filter((p) => (p.category || "").toLowerCase().trim() === "accesorio"),
+    },
+  ];
 
   const renderProductGrid = (items: Product[]) => {
     if (items.length === 0) return null;
@@ -168,7 +187,7 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
           return (
             <div 
               key={product.id} 
-              className={`flex flex-col bg-white border border-gray-200 rounded-2xl overflow-hidden transition-all duration-300 ${isReserved ? "cursor-default opacity-75" : "group cursor-pointer hover:border-gray-400 hover:shadow-md"}`} 
+              className={`flex flex-col bg-white border border-gray-200 rounded-sm overflow-hidden transition-all duration-300 ${isReserved ? "cursor-default opacity-75" : "group cursor-pointer hover:border-gray-400 hover:shadow-md"}`} 
               onClick={() => {
                 if (!isReserved) {
                   setSelectedProduct(product);
@@ -244,7 +263,8 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
 
   return (
     <>
-      <section id="catalogo" className="relative w-full bg-linear-to-r from-[#d7f5ff] via-[#ead8fd] to-[#d7f5ff] px-4 py-24 font-sans lg:px-8">
+    {/* from-[#201229] via-pink-950 to-[#201229] */}
+      <section id="catalogo" className="relative w-full bg-linear-to-b bg-[#201229] px-4 py-24 font-sans lg:px-8"> 
         <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center">
           <span className="mb-4 inline-block w-fit rounded-full border border-red-100 bg-red-50 px-5 py-2 text-xs font-bold tracking-widest text-red-600 uppercase shadow-sm sm:text-sm">
             🔥 Catálogo Oficial
@@ -268,7 +288,7 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
 
           <div className="w-full flex flex-col lg:flex-row gap-8 items-start">
             {/* Sidebar de Filtros Sticky para Desktop */}
-            <aside className="hidden lg:flex w-72 shrink-0 bg-gray-50/95 border border-gray-200/80 rounded-3xl p-6 shadow-xs sticky top-24 flex-col max-h-[calc(100vh-7rem)] overflow-y-auto">
+            <aside className="hidden lg:flex w-72 shrink-0 bg-gray-50/95 border border-gray-200/80 rounded-lg p-6 shadow-xs sticky top-24 flex-col max-h-[calc(100vh-7rem)] overflow-y-auto">
               <CatalogFilters {...sharedFilterProps} isMobile={false} />
             </aside>
 
@@ -319,57 +339,21 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
                   {appliedCategory !== "todas" || (searchQuery && searchQuery.trim() !== "") ? (
                     renderProductGrid(filteredProducts)
                   ) : (
-                    <>
-                      {juegosNuevos.length > 0 && (
-                        <div className="mb-14 w-full">
-                          <div className="mb-6 flex items-center justify-between border-b border-gray-100 pb-3">
-                            <h3 className="text-lg font-bold tracking-tight text-gray-900 flex items-center gap-2">
-                              <span>🆕</span> Juegos Nuevos (Sellados)
-                            </h3>
-                            <span className="text-xs font-semibold text-gray-400">{juegosNuevos.length} disponibles</span>
-                          </div>
-                          {renderProductGrid(juegosNuevos)}
-                        </div>
-                      )}
-
-                      {juegosUsados.length > 0 && (
-                        <div className="mb-14 w-full">
-                          <div className="mb-6 flex items-center justify-between border-b border-gray-100 pb-3">
-                            <h3 className="text-lg font-bold tracking-tight text-gray-900 flex items-center gap-2">
-                              <span>👾</span> Juegos Usados
-                            </h3>
-                            <span className="text-xs font-semibold text-gray-400">{juegosUsados.length} disponibles</span>
-                          </div>
-                          {renderProductGrid(juegosUsados)}
-                        </div>
-                      )}
-
-                      {consolas.length > 0 && (
-                        <div className="mb-14 w-full">
-                          <div className="mb-6 flex items-center justify-between border-b border-gray-100 pb-3">
-                            <div>
-                              <h3 className="text-lg font-bold tracking-tight text-gray-900 flex items-center gap-2">
-                                <span>🎮</span> Consolas
+                    // Renderizado dinámico con .map() de las secciones de categorías
+                    sectionCategories.map(
+                      (cat) =>
+                        cat.items.length > 0 && (
+                          <div key={cat.title} className="mb-14 w-full">
+                            <div className="mb-6 flex items-center justify-between border-b border-gray-100 pb-3">
+                              <h3 className="text-lg font-bold tracking-tight text-white text-shadow-lg text-shadow-brand-magenta flex items-center gap-2">
+                                <span>{cat.icon}</span> {cat.title}
                               </h3>
+                              <span className="text-xs font-semibold text-gray-400">{cat.items.length} disponibles</span>
                             </div>
-                            <span className="text-xs font-semibold text-gray-400">{consolas.length} disponibles</span>
+                            {renderProductGrid(cat.items)}
                           </div>
-                          {renderProductGrid(consolas)}
-                        </div>
-                      )}
-
-                      {accesorios.length > 0 && (
-                        <div className="mb-14 w-full">
-                          <div className="mb-6 flex items-center justify-between border-b border-gray-100 pb-3">
-                            <h3 className="text-lg font-bold tracking-tight text-gray-900 flex items-center gap-2">
-                              <span>🎧</span> Accesorios
-                            </h3>
-                            <span className="text-xs font-semibold text-gray-400">{accesorios.length} disponibles</span>
-                          </div>
-                          {renderProductGrid(accesorios)}
-                        </div>
-                      )}
-                    </>
+                        )
+                    )
                   )}
                 </div>
               )}
