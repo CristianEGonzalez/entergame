@@ -71,42 +71,42 @@ const Header: React.FC<HeaderProps> = ({ onSearchSubmit }) => {
     <>
       <header className="sticky top-0 z-50 flex w-full items-center justify-between border-b border-gray-800 bg-black/80 px-4 py-3 font-sans shadow-xs backdrop-blur-md">
         
-        {/* Logo Area + SearchBar en Desktop */}
-        <div className="flex items-center gap-4 md:gap-8 grow md:grow-0">
-          <div className="relative z-50 flex items-center gap-3 tracking-tighter shrink-0">
-            <Link to="/" onClick={(e) => handleNavClick(e, "inicio")} className="flex items-center gap-2.5">
+        {/* Logo Area + SearchBar compacta en pantallas medianas */}
+        <div className="flex items-center gap-4 grow 2xl:grow-0">
+          <div className="relative z-50 flex items-center gap-2.5 tracking-tighter shrink-0">
+            <Link to="/" onClick={(e) => handleNavClick(e, "inicio")} className="flex items-center gap-2">
               <img 
                 src={enterGameIcon} 
                 alt="EnterGame Icon" 
-                className="w-10 h-10 object-contain" 
+                className="w-9 h-9 object-contain" 
               />
-              <h4 className="font-orbitron text-brand-cyan text-2xl sm:text-3xl md:text-4xl font-black transition-all duration-300 hover:scale-[1.02] hover:opacity-80">
+              <h4 className="font-orbitron text-brand-cyan text-2xl font-black transition-all duration-300 hover:scale-[1.02]">
                 Enter<span className="text-brand-magenta">Game</span>
               </h4>
             </Link>
           </div>
 
-          {/* SearchBar más ancha para Desktop */}
-          <div className="hidden md:block w-72 lg:w-96 xl:w-md">
+          {/* SearchBar para Desktop grande, un poco más compacta en 2xl */}
+          <div className="hidden md:block grow max-w-xs lg:max-w-sm 2xl:w-96">
             <SearchBar onSearch={handleSearch} />
           </div>
         </div>
 
-        {/* Navigation Links (Desktop) */}
-        <nav className="hidden items-center lg:flex">
+        {/* Navigation Links (Solo se muestra en pantallas muy grandes 2xl en adelante para evitar desbordes) */}
+        <nav className="hidden items-center 2xl:flex shrink-0">
           {links.map((item) => (
             <Link key={item} to={`/#${item.toLowerCase()}`} onClick={(e) => handleNavClick(e, item.toLowerCase())} className="hover:text-brand-magenta mr-6 text-sm font-bold tracking-wider text-gray-300 uppercase transition-colors duration-300">
               {item}
             </Link>
           ))}
 
-          {/* Enlace a App Sorteos (Desktop) */}
+          {/* Enlace a App Sorteos */}
           <Link to="/sorteos" className="mr-6 flex items-center gap-1.5 text-sm font-bold tracking-wider text-cyan-400 uppercase transition-colors duration-300 hover:text-cyan-300">
             <span>🎰</span>
             <span>App Sorteos</span>
           </Link>
 
-          {/* Enlace a Instagram (Desktop) */}
+          {/* Enlace a Instagram */}
           <a href="https://instagram.com/entergame_ok" target="_blank" rel="noopener noreferrer" aria-label="Instagram de EnterGame" className="group mr-6 flex items-center justify-center">
             <svg className="h-5 w-5 transition-transform group-hover:scale-110" viewBox="0 0 24 24">
               <defs>
@@ -128,16 +128,16 @@ const Header: React.FC<HeaderProps> = ({ onSearchSubmit }) => {
           <Button nombre="Contactar" onClick={() => setContactOpen(true)} className="bg-brand-purple rounded-full px-6 py-2 font-bold text-white shadow-md transition-colors hover:bg-purple-700" />
         </nav>
 
-        {/* Acciones Móvil: Botón de Lupa + Menú Hamburguesa */}
-        <div className="flex items-center gap-2 md:hidden">
+        {/* Acciones Responsivas: Lupa en móviles + Menú Hamburguesa en pantallas menores a 2xl */}
+        <div className="flex items-center gap-2 2xl:hidden shrink-0">
           
-          {/* Botón Lupa en Móvil */}
+          {/* Botón Lupa (Visible solo en pantallas chicas donde la searchbar del header se oculta) */}
           <button 
             onClick={() => {
               setMobileSearchOpen(!mobileSearchOpen);
               setMenuOpen(false);
             }}
-            className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-900 border border-gray-800 text-gray-300 hover:text-white transition-colors"
+            className="flex md:hidden h-10 w-10 items-center justify-center rounded-xl bg-gray-900 border border-gray-800 text-gray-300 hover:text-white transition-colors"
             aria-label="Buscar en el catálogo"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -169,8 +169,8 @@ const Header: React.FC<HeaderProps> = ({ onSearchSubmit }) => {
         </div>
       )}
 
-      {/* --- MENÚ MÓVIL --- */}
-      <div className={`fixed inset-0 z-40 flex h-full w-full flex-col items-center justify-start gap-6 bg-black/95 pt-24 px-6 backdrop-blur-xl transition-all duration-300 ease-in-out md:hidden ${menuOpen ? "visible scale-100 opacity-100" : "pointer-events-none invisible scale-95 opacity-0"} `}>
+      {/* --- MENÚ DESPLEGABLE (Hamburguesa) --- */}
+      <div className={`fixed inset-0 z-40 flex h-full w-full flex-col items-center justify-start gap-6 bg-black/95 pt-24 px-6 backdrop-blur-xl transition-all duration-300 ease-in-out 2xl:hidden ${menuOpen ? "visible scale-100 opacity-100" : "pointer-events-none invisible scale-95 opacity-0"} `}>
         
         {links.map((item) => (
           <Link key={item} to={`/#${item.toLowerCase()}`} onClick={(e) => handleNavClick(e, item.toLowerCase())} className="font-orbitron relative pb-1 text-2xl font-bold tracking-widest text-white uppercase transition-all duration-300 hover:text-brand-cyan">
@@ -178,13 +178,13 @@ const Header: React.FC<HeaderProps> = ({ onSearchSubmit }) => {
           </Link>
         ))}
 
-        {/* Enlace a App Sorteos (Mobile) */}
+        {/* Enlace a App Sorteos */}
         <Link to="/sorteos" onClick={() => setMenuOpen(false)} className="font-orbitron relative flex items-center gap-2 pb-1 text-2xl font-bold tracking-widest text-cyan-400 uppercase transition-all duration-300 hover:text-cyan-300">
           <span>🎰</span>
           <span>App Sorteos</span>
         </Link>
 
-        {/* Enlace a Instagram (Mobile) */}
+        {/* Enlace a Instagram */}
         <a href="https://instagram.com/entergame_ok" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2.5 rounded-xl border border-gray-800 bg-gray-900 px-4 py-2 text-lg font-bold text-white">
           <svg className="h-6 w-6" viewBox="0 0 24 24">
             <defs>
