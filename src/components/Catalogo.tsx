@@ -204,6 +204,18 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
           <div className="absolute inset-0 bg-linear-to-b from-transparent via-brand-purple/20 to-transparent bg-size-[100%_800px]" />
         </div>
 
+        {/* Patrón sutil estático */}
+        <div
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, rgba(46, 188, 252, 0.4) 1px, transparent 1px),
+              linear-gradient(to bottom, rgba(249, 6, 242, 0.4) 1px, transparent 1px)
+            `,
+            backgroundSize: "40px 40px",
+          }}
+        />
+
 
         <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center">
           <span className="mb-4 inline-block w-fit rounded-full border border-red-100 bg-red-50 px-5 py-2 text-xs font-bold tracking-widest text-red-600 uppercase shadow-sm sm:text-sm">
