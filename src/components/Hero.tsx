@@ -2,6 +2,7 @@ import React from "react";
 import ContactButton from "./ContactButton";
 import InstagramCarousel from "./InstagramCarousel";
 import SynthWave from "./SynthWave";
+import logo from "../assets/EnterGameLogo.png";
 
 const Hero: React.FC = () => {
   const WHATSAPP_CHANNEL_URL = import.meta.env.VITE_WHATSAPP_CHANNEL_URL;
@@ -9,11 +10,20 @@ const Hero: React.FC = () => {
   return (
     <section id="inicio" className="relative flex min-h-[calc(100vh-4rem)] w-full items-center overflow-hidden bg-[#0b0c16] font-sans pb-12">
 
+      {/* ======= ESTILOS DE ANIMACIÓN PARA EL LOGO ======= */}
+      <style>{`
+        @keyframes float-logo {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-12px) rotate(1.5deg); }
+        }
+        .animate-float {
+          animation: float-logo 4.5s ease-in-out infinite;
+        }
+      `}</style>
+
       {/* ======= FONDO SYNTHWAVE LIVIANO ======= */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden bg-[#201229]">
-        {/* Luces estáticas de fondo */}
         <div className="bg-brand-purple/40 absolute top-1/4 left-1/4 h-100 w-100 rounded-full blur-[100px]" />
-        {/* Patrón sutil estático */}
         <div
           className="absolute inset-0 opacity-20"
           style={{
@@ -27,23 +37,39 @@ const Hero: React.FC = () => {
       </div>
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-6 py-8 lg:px-8 lg:py-12">
-        <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-12">
+        <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
+          
           {/* ======= COLUMNA IZQUIERDA ======= */}
-          <div className="flex max-w-2xl flex-col items-start">
+          <div className="flex flex-col items-start">
 
             {/* Badge */}
-            <div className="border-brand-cyan/30 text-brand-cyan mb-4 inline-flex items-center gap-2 rounded-full border bg-black/40 px-3.5 py-1.5 text-xs font-bold tracking-widest uppercase shadow-sm backdrop-blur-md sm:text-sm">
+            <div className="border-brand-cyan/30 text-brand-cyan mb-6 inline-flex items-center gap-2 rounded-full border bg-black/40 px-3.5 py-1.5 text-xs font-bold tracking-widest uppercase shadow-sm backdrop-blur-md sm:text-sm">
               <span className="bg-brand-magenta h-2 w-2 animate-pulse rounded-full" />
               Tienda gamer
             </div>
 
-            {/* Título */}
-            <h1 className="font-orbitron mb-4 text-left text-3xl leading-[1.1] font-black tracking-tight text-white sm:text-4xl xl:text-5xl">
-              Entrá al Juego
-              <br />
-              con <span className="text-brand-cyan font-orbitron font-black drop-shadow-[0_0_15px_rgba(46,188,252,0.4)]">Enter</span>
-              <span className="text-brand-magenta font-orbitron font-black drop-shadow-[0_0_15px_rgba(249,6,242,0.4)]">Game</span>
-            </h1>
+            {/* Contenedor principal: Logo grande y Título */}
+            <div className="flex flex-col xl:flex-row xl:items-center gap-6 mb-6 w-full">
+              
+              {/* Logo Grande Animado (Adaptado para Móvil, Tablet y Desktop) */}
+              <div className="relative animate-float self-center xl:self-auto shrink-0 my-2 xl:my-0">
+                <div className="absolute inset-0 rounded-full bg-linear-to-r from-brand-cyan/40 to-brand-magenta/40 blur-xl scale-90" />
+                <img 
+                  src={logo} 
+                  alt="EnterGame Logo" 
+                  className="relative w-[65vw] max-w-70 h-auto sm:w-56 sm:h-56 md:w-64 md:h-64 xl:w-44 xl:h-44 object-contain drop-shadow-[0_0_20px_rgba(46,188,252,0.6)]"
+                />
+              </div>
+              
+              {/* Título */}
+              <h1 className="font-orbitron text-left text-3xl leading-[1.1] font-black tracking-tight text-white sm:text-4xl xl:text-5xl">
+                Entrá al Juego
+                <br />
+                con <span className="text-brand-cyan font-orbitron font-black drop-shadow-[0_0_15px_rgba(46,188,252,0.4)]">Enter</span>
+                <span className="text-brand-magenta font-orbitron font-black drop-shadow-[0_0_15px_rgba(249,6,242,0.4)]">Game</span>
+              </h1>
+
+            </div>
 
             {/* Descripción */}
             <p className="mb-4 max-w-xl text-left text-base leading-relaxed text-gray-300 sm:text-lg">
