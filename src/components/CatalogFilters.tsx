@@ -21,10 +21,8 @@ const CatalogFilters: React.FC<CatalogFiltersProps> = ({
   tempPlatform,
   setTempPlatform,
   availablePlatforms,
-  hasUnappliedFilters,
   appliedPlatform,
   appliedCategory,
-  searchQuery,
   handleResetFilters,
   handleApplyFilters,
   isMobile = false,
@@ -37,16 +35,18 @@ const CatalogFilters: React.FC<CatalogFiltersProps> = ({
     { id: "accesorio", label: "🎧 Accesorios" },
   ];
 
-  const hasActiveFilters = appliedPlatform !== "Todas" || appliedCategory !== "todas" || (searchQuery && searchQuery.trim() !== "");
+  // Detecta si hay categoría o plataforma activa (para el botón limpiar interno)
+  const hasCategoryOrPlatformActive = appliedCategory !== "todas" || appliedPlatform !== "todas";
 
   return (
-    <div className="flex flex-col gap-6">
-      {/* Cabecera del filtro */}
-      <div className="flex items-center justify-between border-b border-gray-200 pb-4">
-        <h3 className="font-bold text-gray-900 text-sm flex items-center gap-2">
-          🔍 Filtrar Productos
+    <div className="flex flex-col gap-3 sm:gap-4">
+      
+      {/* Cabecera del filtro (Eliminamos la barra "Filtrado activo" de arriba) */}
+      <div className="flex items-center justify-between border-b border-gray-200 pb-2.5">
+        <h3 className="font-bold text-gray-900 text-xs sm:text-sm flex items-center gap-2">
+          🔍 Filtrar Categoría
         </h3>
-        {hasActiveFilters && (
+        {hasCategoryOrPlatformActive && (
           <button 
             onClick={handleResetFilters}
             className="text-xs font-semibold text-red-600 hover:underline cursor-pointer"
@@ -56,22 +56,22 @@ const CatalogFilters: React.FC<CatalogFiltersProps> = ({
         )}
       </div>
 
-      {/* 1. Categorías */}
+      {/* 1. Categorías (Espaciados compactos para evitar scroll) */}
       <div>
-        <label className="text-xs font-bold text-gray-700 uppercase tracking-wider block mb-3">
+        <label className="text-[11px] font-bold text-gray-700 uppercase tracking-wider block mb-1.5">
           Categoría
         </label>
-        <div className="flex flex-col gap-1.5">
+        <div className="grid grid-cols-1 gap-1">
           {categories.map((cat) => {
             const isActive = tempCategory === cat.id;
             return (
               <button
                 key={cat.id}
                 onClick={() => setTempCategory(cat.id)}
-                className={`text-left text-xs font-medium px-3.5 py-2.5 rounded-lg transition-all flex items-center justify-between cursor-pointer ${
+                className={`text-left text-xs font-medium px-3 py-2 rounded-lg transition-all flex items-center justify-between cursor-pointer ${
                   isActive 
                     ? "bg-blue-500 text-white font-bold shadow-sm" 
-                    : "text-gray-600 hover:bg-gray-200/60 hover:text-gray-900"
+                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                 }`}
               >
                 <span>{cat.label}</span>
@@ -81,22 +81,22 @@ const CatalogFilters: React.FC<CatalogFiltersProps> = ({
         </div>
       </div>
 
-      {/* 2. Plataformas */}
+      {/* 2. Plataformas (Diseño en grillas compactas para móviles) */}
       {availablePlatforms.length > 0 && (
-        <div className="border-t border-gray-200 pt-5">
-          <label className="text-xs font-bold text-gray-700 uppercase tracking-wider block mb-3">
+        <div className="border-t border-gray-200 pt-3">
+          <label className="text-[11px] font-bold text-gray-700 uppercase tracking-wider block mb-1.5">
             Plataforma
           </label>
-          <div className="flex flex-wrap lg:flex-col gap-1.5">
+          <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto sm:max-h-none">
             <button
               onClick={() => setTempPlatform("Todas")}
-              className={`text-left text-xs font-medium px-3.5 py-2 rounded-lg transition-all cursor-pointer ${
+              className={`text-left text-xs font-medium px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
                 tempPlatform === "Todas"
                   ? "bg-pink-500 text-white font-bold shadow-sm"
-                  : "text-gray-600 hover:bg-gray-200/60 hover:text-gray-900"
+                  : "text-gray-600 bg-gray-50 hover:bg-gray-100 hover:text-gray-900 border border-gray-200"
               }`}
             >
-              🎮 Todas las plataformas
+              🎮 Todas
             </button>
             {availablePlatforms.map((platform) => {
               const isActive = tempPlatform === platform;
@@ -104,10 +104,10 @@ const CatalogFilters: React.FC<CatalogFiltersProps> = ({
                 <button
                   key={platform}
                   onClick={() => setTempPlatform(platform)}
-                  className={`text-left text-xs font-medium px-3.5 py-2 rounded-xl transition-all cursor-pointer ${
+                  className={`text-left text-xs font-medium px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
                     isActive
                       ? "bg-pink-500 text-white font-bold shadow-sm"
-                      : "text-gray-600 hover:bg-gray-200/60 hover:text-gray-900"
+                      : "text-gray-600 bg-gray-50 hover:bg-gray-100 hover:text-gray-900 border border-gray-200"
                   }`}
                 >
                   {platform}
@@ -119,27 +119,17 @@ const CatalogFilters: React.FC<CatalogFiltersProps> = ({
       )}
 
       {/* Botón Aplicar */}
-      {hasUnappliedFilters && isMobile && (
-        <div className="border-t border-gray-100 pt-4 mt-2">
+      {isMobile && (
+        <div className="border-t border-gray-100 pt-3 mt-1">
           <button
             onClick={handleApplyFilters}
-            className="w-full bg-brand-purple text-white font-bold py-3.5 rounded-xl text-xs shadow-md cursor-pointer"
+            className="w-full bg-brand-purple text-white font-bold py-2.5 rounded-xl text-xs shadow-md cursor-pointer"
           >
             Aplicar filtros y ver resultados
           </button>
         </div>
       )}
 
-      {hasUnappliedFilters && !isMobile && (
-        <div className="border-t border-gray-200 pt-5 mt-auto">
-          <button
-            onClick={handleApplyFilters}
-            className="w-full bg-brand-purple text-white font-bold py-3 rounded-xl text-xs shadow-md hover:bg-brand-purple/80 transition-all scale-105 cursor-pointer"
-          >
-            Aplicar filtros
-          </button>
-        </div>
-      )}
     </div>
   );
 };

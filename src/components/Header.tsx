@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import Button from "./Button";
 import ContactModal from "./ContactModal";
@@ -16,17 +16,18 @@ const Header: React.FC<HeaderProps> = ({ onSearchSubmit }) => {
 
   const location = useLocation();
   const navigate = useNavigate();
+  const isFirstType = useRef<boolean>(true); // Controla que el scroll solo se ejecute al iniciar la búsqueda
 
   const hamburgerLine: string = `h-1 w-6 my-1 rounded-full bg-gray-100 transition ease transform duration-300`;
   const links: string[] = ["Catalogo", "Comprar", "Vender", "Canje", "FAQ"];
 
-  useEffect(() => {
-    if (menuOpen || mobileSearchOpen) {
+useEffect(() => {
+    if (menuOpen || contactOpen) {
       document.body.style.overflow = "hidden";
-    } else if (!contactOpen) {
+    } else {
       document.body.style.overflow = "unset";
     }
-  }, [menuOpen, contactOpen, mobileSearchOpen]);
+  }, [menuOpen, contactOpen]);
 
   const handleMobileContact = (): void => {
     setMenuOpen(false);
@@ -48,14 +49,22 @@ const Header: React.FC<HeaderProps> = ({ onSearchSubmit }) => {
     }
   };
 
+  // --- BÚSQUEDA EN TIEMPO REAL CON SCROLL AUTOMÁTICO ---
   const handleSearch = (searchTerm: string) => {
     if (onSearchSubmit) {
-      onSearchSubmit(searchTerm);
+      onSearchSubmit(searchTerm); // Actualiza la lista en tiempo real
     }
-    setMenuOpen(false);
-    setMobileSearchOpen(false);
-    
-    setTimeout(() => {
+
+    // Si el usuario borra todo, reseteamos la bandera
+    if (searchTerm.trim() === "") {
+      isFirstType.current = true;
+      return;
+    }
+
+    // Hacemos scroll al catálogo únicamente cuando empieza a tipear (primera letra)
+    if (isFirstType.current) {
+      isFirstType.current = false;
+
       if (location.pathname === "/") {
         document.getElementById("catalogo")?.scrollIntoView({ behavior: "smooth" });
       } else {
@@ -64,7 +73,7 @@ const Header: React.FC<HeaderProps> = ({ onSearchSubmit }) => {
           document.getElementById("catalogo")?.scrollIntoView({ behavior: "smooth" });
         }, 100);
       }
-    }, 150);
+    }
   };
 
   return (
@@ -86,13 +95,13 @@ const Header: React.FC<HeaderProps> = ({ onSearchSubmit }) => {
             </Link>
           </div>
 
-          {/* SearchBar para Desktop grande, un poco más compacta en 2xl */}
+          {/* SearchBar para Desktop */}
           <div className="hidden md:block grow max-w-xs lg:max-w-sm 2xl:w-96">
             <SearchBar onSearch={handleSearch} />
           </div>
         </div>
 
-        {/* Navigation Links (Solo se muestra en pantallas muy grandes 2xl en adelante para evitar desbordes) */}
+        {/* Navigation Links */}
         <nav className="hidden items-center 2xl:flex shrink-0">
           {links.map((item) => (
             <Link key={item} to={`/#${item.toLowerCase()}`} onClick={(e) => handleNavClick(e, item.toLowerCase())} className="hover:text-brand-magenta mr-6 text-sm font-bold tracking-wider text-gray-300 uppercase transition-colors duration-300">
@@ -128,10 +137,10 @@ const Header: React.FC<HeaderProps> = ({ onSearchSubmit }) => {
           <Button nombre="Contactar" onClick={() => setContactOpen(true)} className="bg-brand-purple rounded-full px-6 py-2 font-bold text-white shadow-md transition-colors hover:bg-purple-700" />
         </nav>
 
-        {/* Acciones Responsivas: Lupa en móviles + Menú Hamburguesa en pantallas menores a 2xl */}
+        {/* Acciones Responsivas: Lupa en móviles + Menú Hamburguesa */}
         <div className="flex items-center gap-2 2xl:hidden shrink-0">
           
-          {/* Botón Lupa (Visible solo en pantallas chicas donde la searchbar del header se oculta) */}
+          {/* Botón Lupa */}
           <button 
             onClick={() => {
               setMobileSearchOpen(!mobileSearchOpen);
@@ -162,7 +171,7 @@ const Header: React.FC<HeaderProps> = ({ onSearchSubmit }) => {
         </div>
       </header>
 
-      {/* --- DESPLIEGUE RÁPIDO DE BÚSQUEDA MÓVIL --- */}
+      {/* --- DESPLIEGUE RÁPIDO DE BÚSQUEDA MÓVIL (Permanente mientras se escribe) --- */}
       {mobileSearchOpen && (
         <div className="fixed top-15.25 left-0 right-0 z-40 bg-black/95 border-b border-gray-800 p-4 backdrop-blur-xl md:hidden animate-in slide-in-from-top duration-200">
           <SearchBar onSearch={handleSearch} />

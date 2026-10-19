@@ -100,11 +100,21 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
 
   const hasUnappliedFilters = tempPlatform !== appliedPlatform || tempCategory !== appliedCategory;
 
+  // Aplicación para Mobile (cierra el modal y aplica lo temporal)
   const handleApplyFilters = () => {
     setAppliedPlatform(tempPlatform);
     setAppliedCategory(tempCategory);
     setIsMobileFilterOpen(false); 
     scrollToCatalogoTop(); 
+  };
+
+  // Aplicación instantánea para Desktop (aplica y actualiza todo de un solo golpe)
+  const handleDesktopSelect = (category: string, platform: string) => {
+    setAppliedCategory(category);
+    setAppliedPlatform(platform);
+    setTempCategory(category);
+    setTempPlatform(platform);
+    scrollToCatalogoTop();
   };
 
   const handleResetFilters = () => {
@@ -199,8 +209,6 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
         
         {/* ======= CAPAS VISUALES SYNTHWAVE (FONDO) ======= */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-40">
-
-          {/* Gradiente vertical continuo que genera luces y sombras dinámicas al bajar */}
           <div className="absolute inset-0 bg-linear-to-b from-transparent via-brand-purple/20 to-transparent bg-size-[100%_800px]" />
         </div>
 
@@ -215,7 +223,6 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
             backgroundSize: "40px 40px",
           }}
         />
-
 
         <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center">
           <span className="mb-4 inline-block w-fit rounded-full border border-red-100 bg-red-50 px-5 py-2 text-xs font-bold tracking-widest text-red-600 uppercase shadow-sm sm:text-sm">
@@ -239,8 +246,14 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
           )}
 
           <div className="w-full flex flex-col lg:flex-row gap-8 items-start">
+            {/* ASIDE DESKTOP: Usa handleDesktopSelect para filtrar al instante */}
             <aside className="hidden lg:flex w-72 shrink-0 bg-gray-50/95 border border-gray-200/80 rounded-lg p-6 shadow-xs sticky top-24 flex-col max-h-[calc(100vh-7rem)] overflow-y-auto">
-              <CatalogFilters {...sharedFilterProps} isMobile={false} />
+              <CatalogFilters 
+                {...sharedFilterProps} 
+                isMobile={false} 
+                setTempCategory={(cat) => handleDesktopSelect(cat, appliedPlatform)}
+                setTempPlatform={(plat) => handleDesktopSelect(appliedCategory, plat)}
+              />
             </aside>
 
             <div className="grow w-full">
@@ -250,12 +263,14 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
                 </span>
                 
                 <div className="flex items-center gap-3">
+                  {/* Botón Superior Responsive */}
                   <button
                     onClick={() => setIsMobileFilterOpen(true)}
                     className="lg:hidden flex items-center gap-1.5 bg-gray-900 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold shadow-sm cursor-pointer"
                   >
-                    <span>🔍</span> Filtrar
-                    {(appliedPlatform !== "Todas" || appliedCategory !== "todas" || searchQuery) && (
+                    <span>🔍</span> Filtrar Categoría
+                    {/* El punto rojo SOLO se muestra si hay una categoría seleccionada */}
+                    {appliedCategory !== "todas" && (
                       <span className="w-2 h-2 rounded-full bg-red-500"></span>
                     )}
                   </button>
@@ -322,37 +337,42 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
         </div>
       </section>
 
+      {/* Botón Flotante Inferior Responsive */}
       {isCatalogInView && !isMobileFilterOpen && (
         <div className="lg:hidden fixed bottom-6 right-6 z-50 animate-in fade-in duration-300">
           <button
             onClick={() => setIsMobileFilterOpen(true)}
             className="flex items-center gap-2 bg-gray-900 text-white px-5 py-3.5 rounded-full text-xs font-bold shadow-xl hover:bg-black transition-transform active:scale-95 cursor-pointer"
           >
-            <span className="text-base">🔍</span> Filtrar productos
-            {(appliedPlatform !== "Todas" || appliedCategory !== "todas" || searchQuery) && (
+            <span className="text-base">🔍</span> Filtrar Categoría
+            {/* El punto rojo SOLO se muestra si hay una categoría seleccionada */}
+            {(appliedPlatform!== "Todas" || appliedCategory !== "todas") && (
               <span className="w-2.5 h-2.5 rounded-full bg-red-500 ring-2 ring-white"></span>
             )}
           </button>
         </div>
       )}
 
-      {isMobileFilterOpen && (
-        <div className="fixed inset-0 z-9999 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-xs p-0 sm:p-4 transition-opacity">
-          <div className="w-full max-w-lg bg-white rounded-t-3xl sm:rounded-3xl p-6 max-h-[85vh] overflow-y-auto shadow-2xl animate-in slide-in-from-bottom duration-300">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold text-gray-900 text-base">Filtrar catálogo</h3>
-              <button 
-                onClick={() => setIsMobileFilterOpen(false)}
-                className="text-gray-400 hover:text-gray-700 font-bold p-2 bg-gray-100 rounded-full text-xs cursor-pointer"
-              >
-                ✕ Cerrar
-              </button>
-            </div>
-            
-            <CatalogFilters {...sharedFilterProps} isMobile={true} />
-          </div>
+      {/* MODAL / DRAWER MOBILE */}
+{isMobileFilterOpen && (
+  <div className="fixed inset-0 z-9999 flex justify-start bg-black/30 backdrop-blur-2xs transition-opacity">
+    <div className="w-1/2 min-w-65 max-w-sm bg-white h-full p-6 overflow-y-auto shadow-2xl animate-in slide-in-from-left duration-300 flex flex-col justify-between">
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-bold text-gray-900 text-sm">Filtrar catálogo</h3>
+          <button 
+            onClick={() => setIsMobileFilterOpen(false)}
+            className="text-gray-400 hover:text-gray-700 font-bold p-1.5 bg-gray-100 rounded-full text-xs cursor-pointer"
+          >
+            ✕
+          </button>
         </div>
-      )}
+        
+        <CatalogFilters {...sharedFilterProps} isMobile={true} />
+      </div>
+    </div>
+  </div>
+)}
 
       <ProductModal 
         isOpen={isProductModalOpen}
