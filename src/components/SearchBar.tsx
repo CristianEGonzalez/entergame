@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 interface SearchBarProps {
   onSearch: (searchTerm: string) => void;
   placeholder?: string;
@@ -12,18 +11,17 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const [query, setQuery] = useState<string>("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setQuery(value);
-    onSearch(value); // Se ejecuta en tiempo real con cada tecla
+    setQuery(e.target.value);
   };
 
   const handleClear = () => {
     setQuery("");
-    onSearch(""); // Resetea la búsqueda al limpiar
+    onSearch(""); 
   };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault(); // Previene la recarga por si presionan Enter
+    e.preventDefault();
+    onSearch(query); 
   };
 
   return (
@@ -41,7 +39,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         className="w-full bg-transparent px-3 py-1.5 text-sm md:text-base text-gray-900 placeholder-gray-400 focus:outline-none font-medium"
       />
 
-      {/* Botón "✕" para borrar búsqueda rápida cuando hay texto */}
+      {/* Botón "✕" para limpiar cuando hay texto */}
       {query && (
         <button
           type="button"
@@ -52,6 +50,14 @@ const SearchBar: React.FC<SearchBarProps> = ({
           ✕
         </button>
       )}
+
+      {/* Botón explícito de búsqueda para presionar */}
+      <button
+        type="submit"
+        className="bg-brand-purple text-white text-xs font-bold px-4 py-2 rounded-xl shadow-md hover:bg-purple-700 transition-all cursor-pointer shrink-0 ml-1"
+      >
+        Buscar
+      </button>
     </form>
   );
 };

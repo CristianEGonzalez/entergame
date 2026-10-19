@@ -13,21 +13,22 @@ const Header: React.FC<HeaderProps> = ({ onSearchSubmit }) => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [contactOpen, setContactOpen] = useState<boolean>(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState<boolean>(false);
+  const [desktopQuery, setDesktopQuery] = useState<string>("");
 
   const location = useLocation();
   const navigate = useNavigate();
-  const isFirstType = useRef<boolean>(true); // Controla que el scroll solo se ejecute al iniciar la búsqueda
+  const isFirstType = useRef<boolean>(true); // Controla el scroll en tiempo real para desktop[cite: 1]
 
   const hamburgerLine: string = `h-1 w-6 my-1 rounded-full bg-gray-100 transition ease transform duration-300`;
   const links: string[] = ["Catalogo", "Comprar", "Vender", "Canje", "FAQ"];
 
-useEffect(() => {
-    if (menuOpen || contactOpen) {
+  useEffect(() => {
+    if (menuOpen || mobileSearchOpen) {
       document.body.style.overflow = "hidden";
-    } else {
+    } else if (!contactOpen) {
       document.body.style.overflow = "unset";
     }
-  }, [menuOpen, contactOpen]);
+  }, [menuOpen, contactOpen, mobileSearchOpen]);
 
   const handleMobileContact = (): void => {
     setMenuOpen(false);
@@ -49,19 +50,40 @@ useEffect(() => {
     }
   };
 
-  // --- BÚSQUEDA EN TIEMPO REAL CON SCROLL AUTOMÁTICO ---
-  const handleSearch = (searchTerm: string) => {
+  // Búsqueda para Móvil (Mantiene el comportamiento que te funciona perfecto)
+  const handleMobileSearch = (searchTerm: string) => {
     if (onSearchSubmit) {
-      onSearchSubmit(searchTerm); // Actualiza la lista en tiempo real
+      onSearchSubmit(searchTerm);
+    }
+    setMenuOpen(false);
+    setMobileSearchOpen(false);
+    
+    setTimeout(() => {
+      if (location.pathname === "/") {
+        document.getElementById("catalogo")?.scrollIntoView({ behavior: "smooth" });
+      } else {
+        navigate("/");
+        setTimeout(() => {
+          document.getElementById("catalogo")?.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+      }
+    }, 150);
+  };
+
+  // Búsqueda en tiempo real para Escritorio (Letra por letra con scroll automático)[cite: 1]
+  const handleDesktopSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const searchTerm = e.target.value;
+    setDesktopQuery(searchTerm);
+
+    if (onSearchSubmit) {
+      onSearchSubmit(searchTerm);
     }
 
-    // Si el usuario borra todo, reseteamos la bandera
     if (searchTerm.trim() === "") {
       isFirstType.current = true;
       return;
     }
 
-    // Hacemos scroll al catálogo únicamente cuando empieza a tipear (primera letra)
     if (isFirstType.current) {
       isFirstType.current = false;
 
@@ -80,7 +102,7 @@ useEffect(() => {
     <>
       <header className="sticky top-0 z-50 flex w-full items-center justify-between border-b border-gray-800 bg-black/80 px-4 py-3 font-sans shadow-xs backdrop-blur-md">
         
-        {/* Logo Area + SearchBar compacta en pantallas medianas */}
+        {/* Logo Area + SearchBar de Desktop (Sin botón, letra por letra) */}
         <div className="flex items-center gap-4 grow 2xl:grow-0">
           <div className="relative z-50 flex items-center gap-2.5 tracking-tighter shrink-0">
             <Link to="/" onClick={(e) => handleNavClick(e, "inicio")} className="flex items-center gap-2">
@@ -95,9 +117,29 @@ useEffect(() => {
             </Link>
           </div>
 
-          {/* SearchBar para Desktop */}
-          <div className="hidden md:block grow max-w-xs lg:max-w-sm 2xl:w-96">
-            <SearchBar onSearch={handleSearch} />
+          {/* SearchBar directa para Desktop sin botón y reactiva al tipeo */}
+          <div className="hidden md:flex items-center grow max-w-xs lg:max-w-sm 2xl:w-96 rounded-2xl bg-white p-1.5 sm:p-2 shadow-sm border border-gray-200">
+            <span className="pl-3 text-gray-400 text-lg select-none">🔍</span>
+            <input
+              type="text"
+              value={desktopQuery}
+              onChange={handleDesktopSearchChange}
+              placeholder="Buscá tu juego, consola o accesorio..."
+              className="w-full bg-transparent px-3 py-1.5 text-sm md:text-base text-gray-900 placeholder-gray-400 focus:outline-none font-medium"
+            />
+            {desktopQuery && (
+              <button
+                type="button"
+                onClick={() => {
+                  setDesktopQuery("");
+                  if (onSearchSubmit) onSearchSubmit("");
+                }}
+                className="mr-2 flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-xs font-bold text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition-colors cursor-pointer"
+                aria-label="Limpiar búsqueda"
+              >
+                ✕
+              </button>
+            )}
           </div>
         </div>
 
@@ -146,7 +188,7 @@ useEffect(() => {
               setMobileSearchOpen(!mobileSearchOpen);
               setMenuOpen(false);
             }}
-            className="flex md:hidden h-10 w-10 items-center justify-center rounded-xl bg-gray-900 border border-gray-800 text-gray-300 hover:text-white transition-colors"
+            className="flex md:hidden h-10 w-10 items-center justify-center rounded-xl bg-gray-900 border border-gray-800 text-gray-300 hover:text-white transition-colors cursor-pointer"
             aria-label="Buscar en el catálogo"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -156,7 +198,7 @@ useEffect(() => {
 
           {/* Menú Hamburguesa */}
           <button 
-            className="group relative z-50 flex h-10 w-10 flex-col items-center justify-center" 
+            className="group relative z-50 flex h-10 w-10 flex-col items-center justify-center cursor-pointer" 
             aria-label="Abrir menú de navegación" 
             onClick={() => {
               setMenuOpen(!menuOpen);
@@ -171,10 +213,10 @@ useEffect(() => {
         </div>
       </header>
 
-      {/* --- DESPLIEGUE RÁPIDO DE BÚSQUEDA MÓVIL (Permanente mientras se escribe) --- */}
+      {/* --- DESPLIEGUE RÁPIDO DE BÚSQUEDA MÓVIL (Usa la SearchBar con botón que funciona perfecto en móvil) --- */}
       {mobileSearchOpen && (
         <div className="fixed top-15.25 left-0 right-0 z-40 bg-black/95 border-b border-gray-800 p-4 backdrop-blur-xl md:hidden animate-in slide-in-from-top duration-200">
-          <SearchBar onSearch={handleSearch} />
+          <SearchBar onSearch={handleMobileSearch} />
         </div>
       )}
 
