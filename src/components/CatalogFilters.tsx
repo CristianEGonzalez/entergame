@@ -35,13 +35,12 @@ const CatalogFilters: React.FC<CatalogFiltersProps> = ({
     { id: "accesorio", label: "🎧 Accesorios" },
   ];
 
-  // Detecta si hay categoría o plataforma activa (para el botón limpiar interno)
-  const hasCategoryOrPlatformActive = appliedCategory !== "todas" || appliedPlatform !== "todas";
+  const hasCategoryOrPlatformActive = appliedCategory !== "todas" || appliedPlatform !== "Todas";
 
   return (
     <div className="flex flex-col gap-3 sm:gap-4">
       
-      {/* Cabecera del filtro (Eliminamos la barra "Filtrado activo" de arriba) */}
+      {/* Cabecera del filtro */}
       <div className="flex items-center justify-between border-b border-gray-200 pb-2.5">
         <h3 className="font-bold text-gray-900 text-xs sm:text-sm flex items-center gap-2">
           🔍 Filtrar Categoría
@@ -56,7 +55,7 @@ const CatalogFilters: React.FC<CatalogFiltersProps> = ({
         )}
       </div>
 
-      {/* 1. Categorías (Espaciados compactos para evitar scroll) */}
+      {/* 1. Categorías */}
       <div>
         <label className="text-[11px] font-bold text-gray-700 uppercase tracking-wider block mb-1.5">
           Categoría
@@ -78,10 +77,22 @@ const CatalogFilters: React.FC<CatalogFiltersProps> = ({
               </button>
             );
           })}
+
+          {/* Filtro de Ofertas basado en la existencia de offert */}
+          <button
+            onClick={() => setTempCategory("oferta")}
+            className={`text-left text-xs font-medium px-3 py-2 rounded-lg transition-all flex items-center justify-between cursor-pointer mt-1 ${
+              tempCategory === "oferta"
+                ? "bg-red-600 text-white font-bold shadow-sm"
+                : "text-red-600 bg-red-50 hover:bg-red-100 font-semibold"
+            }`}
+          >
+            <span>🔥 Ofertas Especiales</span>
+          </button>
         </div>
       </div>
 
-      {/* 2. Plataformas (Diseño en grillas compactas para móviles) */}
+      {/* 2. Plataformas */}
       {availablePlatforms.length > 0 && (
         <div className="border-t border-gray-200 pt-3">
           <label className="text-[11px] font-bold text-gray-700 uppercase tracking-wider block mb-1.5">

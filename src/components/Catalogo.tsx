@@ -14,6 +14,8 @@ interface Product {
   category?: string;
   platform?: string;
   description?: string;
+  offert?: string | number;       // Ej: "20%" o 20
+  discountPrice?: string | number; // Ej: "$147,604" o el valor calculado
 }
 
 interface CatalogoProps {
@@ -127,9 +129,10 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
   const validProducts = products.filter((product) => {
     const stockNum = Number(product.stock) || 0;
     const status = (product.status || "").trim();
-    const isPreventaOrPedido = status === "Preventa" || status === "Pedido" || status === "Oferta";
+    const isPreventaOrPedido = status === "Preventa" || status === "Pedido";
     const hasStock = stockNum >= 1;
-    return (hasStock || isPreventaOrPedido) && product.title && product.title.trim() !== "";
+    const hasOffert = product.offert !== undefined && product.offert !== null && product.offert !== "";
+    return (hasStock || isPreventaOrPedido || hasOffert) && product.title && product.title.trim() !== "";
   });
 
   const availablePlatforms = Array.from(
@@ -146,9 +149,16 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
       (product.platform || "").trim().toLowerCase() === appliedPlatform.toLowerCase();
 
     const productCat = (product.category || "").trim().toLowerCase();
-    const matchesCategory = 
-      appliedCategory === "todas" || 
-      productCat === appliedCategory.toLowerCase();
+    const hasOffert = product.offert !== undefined && product.offert !== null && product.offert !== "";
+
+    let matchesCategory = false;
+    if (appliedCategory === "todas") {
+      matchesCategory = true;
+    } else if (appliedCategory === "oferta") {
+      matchesCategory = hasOffert;
+    } else {
+      matchesCategory = productCat === appliedCategory.toLowerCase();
+    }
 
     const matchesSearch = 
       !searchQuery || 
@@ -270,7 +280,7 @@ const Catalogo: React.FC<CatalogoProps> = ({ searchQuery = "", onClearSearch }) 
                   <div className="hidden sm:flex items-center gap-2">
                     <span className="text-xs text-gray-400">Filtro aplicado:</span>
                     <span className="text-xs font-bold bg-white border border-gray-200 px-3 py-1 rounded-full text-red-600 shadow-2xs">
-                      {appliedCategory === "todas" ? "General" : appliedCategory} {appliedPlatform !== "Todas" ? `• ${appliedPlatform}` : ""}
+                      {appliedCategory === "todas" ? "General" : appliedCategory === "oferta" ? "Ofertas Especiales" : appliedCategory} {appliedPlatform !== "Todas" ? `• ${appliedPlatform}` : ""}
                     </span>
                   </div>
                 </div>

@@ -8,6 +8,8 @@ interface Product {
   price: string;
   status: string;
   description?: string;
+  offert?: string | number;       // Porcentaje de descuento
+  discountPrice?: string | number; // Precio final con descuento de la planilla
 }
 
 interface ProductModalProps {
@@ -35,7 +37,43 @@ const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, product })
 
   if (!isVisible || !product) return null;
 
-  const formattedPrice = Number(product.price.toString().replace(/[^0-9]/g, "")).toLocaleString("en-US");
+  // Detección de oferta y valores de descuento
+  const discountValue = product.offert || (product as any).Offert || (product as any).OFFERT;
+  const hasOffert = discountValue !== undefined && discountValue !== null && discountValue !== "";
+
+  // Precio original formateado
+  const rawPriceNumber = Number(product.price.toString().replace(/[^0-9]/g, "")) || 0;
+  const originalPriceFormatted = rawPriceNumber.toLocaleString("en-US");
+
+  // Buscar discountPrice o calcular respaldo si fuera necesario
+  const rawDiscountPrice = 
+    product.discountPrice ?? 
+    (product as any).discountprice ?? 
+    (product as any).DiscountPrice ?? 
+    (product as any).DISCOUNTPRICE;
+
+  let finalPriceNumber = rawPriceNumber;
+  let hasValidDiscountPrice = false;
+
+  if (rawDiscountPrice !== undefined && rawDiscountPrice !== null && rawDiscountPrice !== "") {
+    const parsed = Number(rawDiscountPrice.toString().replace(/[^0-9]/g, ""));
+    if (!isNaN(parsed) && parsed > 0) {
+      finalPriceNumber = parsed;
+      hasValidDiscountPrice = parsed < rawPriceNumber;
+    }
+  } else if (hasOffert) {
+    const numericOffert = typeof discountValue === "number" 
+      ? discountValue 
+      : parseFloat(discountValue.toString().replace("%", "").trim());
+      
+    if (!isNaN(numericOffert)) {
+      const calculated = rawPriceNumber * (1 - numericOffert / 100);
+      finalPriceNumber = Math.round(calculated / 100) * 100;
+      hasValidDiscountPrice = finalPriceNumber < rawPriceNumber;
+    }
+  }
+
+  const finalPriceFormatted = finalPriceNumber.toLocaleString("en-US");
 
   // === FUNCIÓN PARA REDIRIGIR WHATSAPP ===
   const handleWhatsAppClick = () => {
@@ -58,7 +96,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, product })
         </div>
 
         {/* Botón de cerrar */}
-        <button onClick={onClose} className="absolute top-4 right-4 z-30 rounded-full bg-white/80 p-2 text-lg font-bold text-gray-400 backdrop-blur-xs transition-colors hover:text-gray-700">
+        <button onClick={onClose} className="absolute top-4 right-4 z-30 rounded-full bg-white/80 p-2 text-lg font-bold text-gray-400 backdrop-blur-xs transition-colors hover:text-gray-700 cursor-pointer">
           ✕
         </button>
 
@@ -76,10 +114,25 @@ const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, product })
             {/* Título limpio */}
             <h4 className="mb-3 font-sans text-base leading-snug font-semibold text-gray-900 md:text-lg">{product.title}</h4>
 
-            {/* Precio destacado */}
+            {/* Precio destacado con oferta y precio original tachado */}
             <div className="mb-4">
               <span className="mb-0.5 block font-sans text-xs text-gray-400">Precio</span>
-              <span className="font-sans text-xl font-bold tracking-tight text-gray-900 md:text-2xl">$ {formattedPrice}</span>
+              <div className="flex items-baseline gap-3">
+                <span className="font-sans text-xl font-bold tracking-tight text-gray-900 md:text-2xl">
+                  $ {hasValidDiscountPrice ? finalPriceFormatted : originalPriceFormatted}
+                </span>
+
+                {hasOffert && hasValidDiscountPrice && (
+                  <>
+                    <span className="text-sm text-gray-400 line-through">
+                      $ {originalPriceFormatted}
+                    </span>
+                    <span className="text-[10px] font-bold bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full">
+                      {discountValue}% OFF
+                    </span>
+                  </>
+                )}
+              </div>
             </div>
 
             {/* Descripción condicional */}
