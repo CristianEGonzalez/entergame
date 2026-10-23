@@ -3,7 +3,7 @@ import { useLocation, useNavigate, Link } from "react-router-dom";
 import Button from "./Button";
 import ContactModal from "./ContactModal";
 import SearchBar from "./SearchBar";
-import enterGameIcon from '../assets/EnterGameIcon.png';
+import enterGameIcon from '/favicon.png';
 
 interface HeaderProps {
   onSearchSubmit?: (query: string) => void;
