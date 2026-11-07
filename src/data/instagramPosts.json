@@ -1,10 +1,10 @@
 [ 
   {
-    "id": "3",
-    "permalink": "https://www.instagram.com/p/DfQiDDmjCED/",
-    "imageUrl": "/CyberMonday.jpeg",
-    "caption": "Llegó el CyberMonday a EnterGame, hasta el 5/11 aprovechá ofertas increíbles",
-    "mediaType": "novedad" 
+    "id": "1",
+    "permalink": "https://www.instagram.com/p/DdwoKWiqvss/",
+    "imageUrl": "/OcarinaOfTimeCover.jpg",
+    "caption": "Llegó The Legend of Zelda: Ocarina of Time. Conseguí tu juego hoy.",
+    "mediaType": "novedad"
   },
   {
     "id": "2",
@@ -12,12 +12,5 @@
     "imageUrl": "/fc27.jpeg",
     "caption": "Querés el FC 27, corré a comprarlo ya en EnterGame",
     "mediaType": "novedad" 
-  },
-  {
-    "id": "3",
-    "permalink": "https://www.instagram.com/p/DdwoKWiqvss/",
-    "imageUrl": "/OcarinaOfTimeCover.jpg",
-    "caption": "¡Preventa abierta! The Legend of Zelda: Ocarina of Time. Asegurá tu copia hoy.",
-    "mediaType": "preventa"
   }
 ]
